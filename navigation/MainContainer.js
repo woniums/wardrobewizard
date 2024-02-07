@@ -8,38 +8,18 @@ import CameraScreen from "./screens/CameraScreen";
 import OutfitsScreen from "./screens/OutfitsScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 
-//Screen names
 const FeedName = "Feed";
 const CameraName = "Camera";
 const ProfileName = "Profile";
 const OutfitsName = "Outfit";
 
+//creates the bottom navigation bar on each of the screens
 const Tab = createBottomTabNavigator();
 
 function MainContainer() {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName={FeedName}
-        screenOptions={({ route }) => ({
-          tabBar: () => {
-            let rn = route.name;
-            let tn = "";
-            if (rn === FeedName) {
-              tn = "Feed";
-            } else if (rn === CameraName) {
-              tn = "Camera";
-            } else if (rn === OutfitsName) {
-              tn = "Outfit";
-            } else if (rn === ProfileName) {
-              tn = "Profile";
-            }
-
-            // You can return any component that you like here!
-            return <Text style={{ fontSize: 20, color: "blue" }}>{tn}</Text>;
-          },
-        })}
-      >
+      <Tab.Navigator screenOptions={{ headerShown: false }}>
         <Tab.Screen name={FeedName} component={FeedScreen} />
         <Tab.Screen name={CameraName} component={CameraScreen} />
         <Tab.Screen name={OutfitsName} component={OutfitsScreen} />
