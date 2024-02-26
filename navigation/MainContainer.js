@@ -5,12 +5,14 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // Screens
 import FeedScreen from "./screens/FeedScreen";
 import CameraScreen from "./screens/CameraScreen";
-import AlbumsScreen from "./screens/AlbumsScreen";
+import CreateScreen from "./screens/CreateScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import AlbumsScreen from "./screens/AlbumsScreen";
 
 const FeedName = "Feed";
 const CameraName = "Camera";
 const ProfileName = "Profile";
+const CreateName = "Create";
 const AlbumsName = "Albumn";
 
 //creates the bottom navigation bar on each of the screens
@@ -21,6 +23,7 @@ function MainContainer() {
     <NavigationContainer>
       <Tab.Navigator screenOptions={{ headerShown: false }}>
         <Tab.Screen name={FeedName} component={FeedScreen} />
+        <Tab.Screen name={CreateName} component={CreateScreen} />
         <Tab.Screen name={CameraName} component={CameraScreen} />
         <Tab.Screen name={AlbumsName} component={AlbumsScreen} />
         <Tab.Screen name={ProfileName} component={ProfileScreen} />

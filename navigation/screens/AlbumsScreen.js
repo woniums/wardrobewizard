@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import shirt1 from "../../assets/shirt1.png";
 
-const OutfitsScreen = ({ navigator }) => {
+export default function AlbumsScreen({ navigation }) {
   const data = [
     { src: shirt1 },
     { src: shirt1 },
@@ -40,6 +40,4 @@ const OutfitsScreen = ({ navigator }) => {
       )}
     />
   );
-};
-
-export default OutfitsScreen;
+}
