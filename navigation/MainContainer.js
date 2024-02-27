@@ -7,11 +7,16 @@ import FeedScreen from "./screens/FeedScreen";
 import CameraScreen from "./screens/CameraScreen";
 import CreateScreen from "./screens/CreateScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import AlbumsScreen from "./screens/AlbumsScreen";
 
 const FeedName = "Feed";
 const CameraName = "Camera";
 const ProfileName = "Profile";
 const CreateName = "Create";
+<<<<<<< HEAD
+const AlbumsName = "Albumn";
+=======
+>>>>>>> main
 
 //creates the bottom navigation bar on each of the screens
 const Tab = createBottomTabNavigator();
@@ -21,8 +26,13 @@ function MainContainer() {
     <NavigationContainer>
       <Tab.Navigator screenOptions={{ headerShown: false }}>
         <Tab.Screen name={FeedName} component={FeedScreen} />
-        <Tab.Screen name={CameraName} component={CameraScreen} />
         <Tab.Screen name={CreateName} component={CreateScreen} />
+        <Tab.Screen name={CameraName} component={CameraScreen} />
+<<<<<<< HEAD
+        <Tab.Screen name={AlbumsName} component={AlbumsScreen} />
+=======
+        <Tab.Screen name={CreateName} component={CreateScreen} />
+>>>>>>> main
         <Tab.Screen name={ProfileName} component={ProfileScreen} />
       </Tab.Navigator>
     </NavigationContainer>
