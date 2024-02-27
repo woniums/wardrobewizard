@@ -54,8 +54,8 @@ export default function CameraScreen({ navigation }) {
         <Image
           source={{ uri: image }}
           style={{
-            width: Math.min(windowWidth * 0.8, windowHeight),
-            height: Math.min(windowWidth * 0.8, windowHeight),
+            width: Math.min(windowWidth * 0.8, windowHeight * 0.8),
+            height: Math.min(windowWidth * 0.8, windowHeight * 0.8),
             aspectRatio: 1,
           }}
         />
