@@ -56,17 +56,16 @@ export default function CameraScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      {images.map((uri, index) => (
+      {images.length > 0 && ( // if images array is not empty
         <Image
-          key={index}
-          source={{ uri }}
+          source={{ uri: images[images.length - 1] }} // Displays last image
           style={{
             width: Math.min(windowWidth * 0.8, windowHeight * 0.8),
             height: Math.min(windowWidth * 0.8, windowHeight * 0.8),
             aspectRatio: 1,
           }}
         />
-      ))}
+      )}
       <View style={{ flexDirection: "row", position: "absolute", bottom: 20 }}>
         <Button title="Upload Image" onPress={pickImage} />
         <Button title="Take Photo" onPress={takeImage} />
