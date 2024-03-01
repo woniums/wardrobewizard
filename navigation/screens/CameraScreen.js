@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Button, Image, View, useWindowDimensions } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useNavigation } from "@react-navigation/native";
 
 export default function CameraScreen({ navigation }) {
   //https://docs.expo.dev/versions/latest/sdk/imagepicker/
-  const [image, setImage] = useState(null);
+  const navigator = useNavigation();
+  const [images, setImage] = useState([]);
   const windowHeight = useWindowDimensions().height;
   const windowWidth = useWindowDimensions().width;
 
@@ -23,7 +25,7 @@ export default function CameraScreen({ navigation }) {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage([...images, result.assets[0].uri]);
     }
   };
 
@@ -44,15 +46,19 @@ export default function CameraScreen({ navigation }) {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage([...images, result.assets[0].uri]);
     }
+  };
+
+  const goToCreateScreen = () => {
+    navigator.navigate("Create", { images });
   };
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      {image && (
+      {images.length > 0 && ( // if images array is not empty
         <Image
-          source={{ uri: image }}
+          source={{ uri: images[images.length - 1] }} // Displays last image
           style={{
             width: Math.min(windowWidth * 0.8, windowHeight * 0.8),
             height: Math.min(windowWidth * 0.8, windowHeight * 0.8),
@@ -63,6 +69,7 @@ export default function CameraScreen({ navigation }) {
       <View style={{ flexDirection: "row", position: "absolute", bottom: 20 }}>
         <Button title="Upload Image" onPress={pickImage} />
         <Button title="Take Photo" onPress={takeImage} />
+        <Button title="Create" onPress={goToCreateScreen} />
       </View>
     </View>
   );
