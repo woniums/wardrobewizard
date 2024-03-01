@@ -32,7 +32,7 @@ const Tag = () => {
     setShowTextInput(true);
   };
   const route = useRoute();
-  const { images } = route.params;
+  const images = route.params?.images || [];
 
   return (
     <View>
@@ -41,14 +41,17 @@ const Tag = () => {
         <Text>Click me</Text>
       </TouchableOpacity>
       <View>
-        {images.length > 0 &&
+        {images.length === 0 ? (
+          <Text>No Images to display</Text>
+        ) : (
           images.map((image, index) => (
             <Image
               key={index}
               source={{ uri: image }}
               style={{ width: 200, height: 200, marginBottom: 10 }}
             />
-          ))}
+          ))
+        )}
       </View>
     </View>
   );
