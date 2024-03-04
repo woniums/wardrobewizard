@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   Image,
+  SafeAreaView,
 } from "react-native";
 import shirt1 from "../../assets/shirt1.png";
 
@@ -20,24 +21,27 @@ export default function AlbumsScreen({ navigation }) {
     { src: shirt1 },
     { src: shirt1 },
   ];
-  const numColumns = data.length;
 
   return (
-    <FlatList
-      numColumns={numColumns}
-      data={data}
-      renderItem={({ item }) => (
-        <Image
-          source={item.src}
-          style={{
-            flex: 1 / numColumns,
-            borderWidth: 1,
-            borderColor: "blue",
-            resizeMode: "contain",
-            margin: 1,
-          }}
-        />
-      )}
-    />
+    <SafeAreaView style={{ flex: 1 }}>
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={data}
+        renderItem={({ item }) => (
+          <Image
+            source={item.src}
+            style={{
+              width: 200,
+              height: 200,
+              borderWidth: 1,
+              borderColor: "blue",
+              resizeMode: "contain",
+              marginHorizontal: 5,
+            }}
+          />
+        )}
+      />
+    </SafeAreaView>
   );
 }
