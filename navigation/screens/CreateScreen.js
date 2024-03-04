@@ -12,15 +12,16 @@ import { useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { SelectList } from "react-native-dropdown-select-list";
 
-const TextInputButton = ({ onTag, uri }) => {
+const TextInputButton = ({ onTag, uri, getNextImage }) => {
   const [selectedValue, setSelectedValue] = useState("");
   const handleTag = () => {
     if (selectedValue) {
       onTag({ uri, tag: selectedValue });
       setSelectedValue("");
+      getNextImage();
     }
   };
-
+  //https://www.npmjs.com/package/react-native-dropdown-select-list
   return (
     <SafeAreaView>
       <SelectList
@@ -97,7 +98,7 @@ const Tag = () => {
             </>
           )}
         </View>
-        <TextInputButton onTag={handleTag} uri={images[currIndex]} />
+        <TextInputButton onTag={handleTag} uri={images[currIndex]} getNextImage={getNextImage} />
         {console.log(tags)}
       </View>
     </SafeAreaView>
