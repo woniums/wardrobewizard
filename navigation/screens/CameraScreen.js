@@ -10,6 +10,8 @@ export default function CameraScreen({ navigation }) {
   const windowHeight = useWindowDimensions().height;
   const windowWidth = useWindowDimensions().width;
 
+
+
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
@@ -55,7 +57,7 @@ export default function CameraScreen({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: '#90d7f8' }}>
       {images.length > 0 && ( // if images array is not empty
         <Image
           source={{ uri: images[images.length - 1] }} // Displays last image
@@ -63,13 +65,14 @@ export default function CameraScreen({ navigation }) {
             width: Math.min(windowWidth * 0.8, windowHeight * 0.8),
             height: Math.min(windowWidth * 0.8, windowHeight * 0.8),
             aspectRatio: 1,
+            borderWidth: 1, borderColor: '#a7699e', borderRadius: 10, padding: 15, alignItems: 'center',
           }}
         />
       )}
       <View style={{ flexDirection: "row", position: "absolute", bottom: 20 }}>
-        <Button title="Upload Image" onPress={pickImage} />
-        <Button title="Take Photo" onPress={takeImage} />
-        <Button title="Create" onPress={goToCreateScreen} />
+        <Button title="Upload Image" onPress={pickImage} color='#a7699e' />
+        <Button title="Take Photo" onPress={takeImage} color='#a7699e'/>
+        <Button title="Create" onPress={goToCreateScreen} color='#a7699e'/>
       </View>
     </View>
   );
