@@ -33,6 +33,7 @@ const TextInputButton = ({ onTag, uri, getNextImage }) => {
           { key: "4", value: "Accessory" },
         ]}
         boxStyles = {{backgroundColor: "white"}}
+        dropdownItemStyles = {{backgroundColor: "white"}}
         save="value"
       />
       <TouchableOpacity onPress={handleTag} style={styles.button}>
