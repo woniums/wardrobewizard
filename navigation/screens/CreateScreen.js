@@ -68,7 +68,7 @@ const Tag = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 , backgroundColor: '#90d7f8' }}>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View
           style={{
@@ -82,7 +82,7 @@ const Tag = () => {
           ) : (
             <>
               <TouchableOpacity onPress={getPrevImage} style={{ paddingHorizontal: 5 }}>
-                <Icon name="arrow-left" size={30} color="black" />
+                <Icon name="arrow-left" size={30} color="#a7699e" />
               </TouchableOpacity>
               <Image
                 source={{ uri: images[currIndex] }}
@@ -93,7 +93,7 @@ const Tag = () => {
                 }}
               />
               <TouchableOpacity onPress={getNextImage} style={{ paddingHorizontal: 5 }}>
-                <Icon name="arrow-right" size={30} color="black" />
+                <Icon name="arrow-right" size={30} color="#a7699e" />
               </TouchableOpacity>
             </>
           )}
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   button: {
-    backgroundColor: "#DDDDDD",
+    backgroundColor: "#a7699e",
     alignItems: "center",
     padding: 10,
   },
