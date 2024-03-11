@@ -81,7 +81,7 @@ const Tag = () => {
             <Text>No Images to display</Text>
           ) : (
             <>
-              <TouchableOpacity onPress={getPrevImage} style={{ paddingHorizontal: 5, }}>
+              <TouchableOpacity onPress={getPrevImage} style={{ paddingHorizontal: 5}}>
                 <Icon name="arrow-left" size={30} color="#a7699e" />
               </TouchableOpacity>
               <Image
@@ -92,7 +92,7 @@ const Tag = () => {
                   aspectRatio: 1,
                 }}
               />
-              <TouchableOpacity onPress={getNextImage} style={{ paddingHorizontal: 5,}}>
+              <TouchableOpacity onPress={getNextImage} style={{ paddingHorizontal: 5}}>
                 <Icon name="arrow-right" size={30} color="#a7699e" />
               </TouchableOpacity>
             </>
