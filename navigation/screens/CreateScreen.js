@@ -23,8 +23,8 @@ const TextInputButton = ({ onTag, uri, getNextImage }) => {
   };
   //https://www.npmjs.com/package/react-native-dropdown-select-list
   return (
-    <SafeAreaView style = {{backgroundColor: "white"}}>
-      <SelectList
+    <SafeAreaView >
+      <SelectList style = {{backgroundColor: "white"}}
         setSelected={(val) => setSelectedValue(val)}
         data={[
           { key: "1", value: "Top" },
@@ -32,6 +32,7 @@ const TextInputButton = ({ onTag, uri, getNextImage }) => {
           { key: "3", value: "Shoes" },
           { key: "4", value: "Accessory" },
         ]}
+        boxStyles = {{backgroundColor: "white"}}
         save="value"
       />
       <TouchableOpacity onPress={handleTag} style={styles.button}>
