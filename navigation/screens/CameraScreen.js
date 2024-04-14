@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Button,
   Image,
@@ -11,6 +11,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import { SelectList } from "react-native-dropdown-select-list";
+import { insertImageWithTag } from "../../database";
 
 const HandleTagImage = ({ onTag, uri }) => {
   const [selectedValue, setSelectedValue] = useState("");
@@ -54,6 +55,7 @@ export default function CameraScreen({ navigation }) {
 
   const windowHeight = useWindowDimensions().height;
   const windowWidth = useWindowDimensions().width;
+  const photoTaken = useRef(false);
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -72,6 +74,7 @@ export default function CameraScreen({ navigation }) {
     if (!result.canceled) {
       setImage([...images, result.assets[0].uri]);
       setCurrIndex(currIndex + 1);
+      photoTaken.current = true;
     }
   };
 
@@ -93,6 +96,7 @@ export default function CameraScreen({ navigation }) {
     if (!result.canceled) {
       setImage([...images, result.assets[0].uri]);
       setCurrIndex(currIndex + 1);
+      photoTaken.current = true;
     }
   };
 
@@ -101,6 +105,15 @@ export default function CameraScreen({ navigation }) {
       ...prevTags,
       [uri]: tag,
     }));
+  };
+
+  const sendToDatabase = () => {
+    if ((photoTaken.current = true)) {
+      Object.entries(tags).forEach(([uri, tag]) => {
+        insertImageWithTag(uri, tag);
+      });
+      photoTaken.current = false;
+    }
   };
 
   const goToCreateScreen = () => {
@@ -139,6 +152,7 @@ export default function CameraScreen({ navigation }) {
       >
         {images.length > 0 && <HandleTagImage onTag={handleTag} uri={images[currIndex - 1]} />}
         {console.log(tags)}
+        {sendToDatabase()}
       </View>
       <View style={{ flexDirection: "row", position: "absolute", bottom: 20 }}>
         <Button title="Upload Image" onPress={pickImage} color="#a7699e" />
