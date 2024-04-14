@@ -1,16 +1,23 @@
 import React, { useState } from "react";
-import { Button, Image, View, useWindowDimensions, TouchableOpacity, Text } from "react-native";
+import {
+  Button,
+  Image,
+  View,
+  useWindowDimensions,
+  TouchableOpacity,
+  Text,
+  SafeAreaView,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import { SelectList } from "react-native-dropdown-select-list";
 
-const HandleTagImage = ({ onTag, uri, getNextImage }) => {
+const HandleTagImage = ({ onTag, uri }) => {
   const [selectedValue, setSelectedValue] = useState("");
   const handleTag = () => {
     if (selectedValue) {
       onTag({ uri, tag: selectedValue });
       setSelectedValue("");
-      getNextImage();
     }
   };
   //https://www.npmjs.com/package/react-native-dropdown-select-list
@@ -64,7 +71,7 @@ export default function CameraScreen({ navigation }) {
 
     if (!result.canceled) {
       setImage([...images, result.assets[0].uri]);
-      setCurrIndex((currIndex += 1));
+      setCurrIndex(currIndex + 1);
     }
   };
 
@@ -130,9 +137,7 @@ export default function CameraScreen({ navigation }) {
           justifyContent: "center",
         }}
       >
-        {images.length > 0 && (
-          <HandleTagImage onTag={handleTag} uri={images[currIndex]} getNextImage={getNextImage} />
-        )}
+        {images.length > 0 && <HandleTagImage onTag={handleTag} uri={images[currIndex - 1]} />}
         {console.log(tags)}
       </View>
       <View style={{ flexDirection: "row", position: "absolute", bottom: 20 }}>
