@@ -8,40 +8,40 @@ import {
   Image,
   useWindowDimensions,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { SelectList } from "react-native-dropdown-select-list";
+
 
 const Create = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Image
-        source={temp1}
-      />
-      <Image
-        source={temp2}
-      />
-      <Image
-        source={temp3}
-      />
-      <Image
-        source={temp4}
-      />
-      <Image
-        source={temp5}
-      />
-      <Image
-        source={temp6}
-      />
-      <Image
-        source={temp7}
-      />
-      <Image
-        source={temp8}
-      />
+      <Image source={require('./pathToHeadwearImage')} style={styles.image} />
+      <Image source={require('./pathToShirtImage')} style={styles.image} />
+      <Image source={require('./pathToNeckAccessoryImage')} style={styles.image} />
+      <Image source={require('./pathToMidAccessoryImage')} style={styles.image} />
+      <Image source={require('./pathToWristAccessoryImage')} style={styles.image} />
+      <Image source={require('./pathToPantsImage')} style={styles.image} />
+      <Image source={require('./pathToFootwearImage')} style={styles.image} />
+      <Image source={require('./pathToAdditionalAccessoryImage')} style={styles.image} />
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    margin: 10,
+    resizeMode: 'contain',
+  },
+});
+
+export default Create;
 
 // temp1: headwear
 // temp2: shirt/top
