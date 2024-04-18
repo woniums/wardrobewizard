@@ -8,12 +8,14 @@ import CameraScreen from "./screens/CameraScreen";
 import CreateScreen from "./screens/CreateScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import AlbumsScreen from "./screens/AlbumsScreen";
+import LoginScreen from "./screens/LoginScreen";
 
 const FeedName = "Feed";
 const CameraName = "Camera";
 const ProfileName = "Profile";
 const CreateName = "Create";
 const AlbumsName = "Albumns";
+const LoginName = "Login";
 
 //creates the bottom navigation bar on each of the screens
 const Tab = createBottomTabNavigator();
