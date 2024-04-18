@@ -1,12 +1,11 @@
 import * as React from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
+import shirt1 from "../../assets/shirt1.png";
 const windowSize = Dimensions.get("window").width;
 const Post = ({ post }) => {
   const [showTag, setShowTag] = React.useState(false);
   const navigator = useNavigation();
-  const route = useRoute();
 
   const showTags = () => {
     setShowTag(!showTag);
@@ -51,7 +50,7 @@ postInfo = [
   {
     id: 1,
     username: "Hi",
-    image: "uri",
+    image: shirt1,
     tag: "Shirt",
     caption: "Awesome caption",
     purchasedFrom: "xyz",
