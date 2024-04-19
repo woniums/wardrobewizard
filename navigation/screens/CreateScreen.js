@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     marginLeft: 70,
     marginTop: 10,
     resizeMode: 'contain',
+    borderRadius: 10,
   },
   side:{    
     width: 120,
@@ -55,6 +56,7 @@ const styles = StyleSheet.create({
     marginLeft:60,
     top: 20,
     right: 100,
+    borderRadius: 10,
   },
 });
 
