@@ -1,3 +1,4 @@
+/*
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -55,3 +56,4 @@ export default Create;
 // temp6: pants/bottom
 // temp7: footwear
 // temp8: additional accessory
+*/
