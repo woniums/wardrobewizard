@@ -9,18 +9,17 @@ import {
   useWindowDimensions,
 } from "react-native";
 
-
 const Create = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Image source={require('./pathToHeadwearImage')} style={styles.image} />
-      <Image source={require('./pathToShirtImage')} style={styles.image} />
-      <Image source={require('./pathToNeckAccessoryImage')} style={styles.image} />
-      <Image source={require('./pathToMidAccessoryImage')} style={styles.image} />
-      <Image source={require('./pathToWristAccessoryImage')} style={styles.image} />
-      <Image source={require('./pathToPantsImage')} style={styles.image} />
-      <Image source={require('./pathToFootwearImage')} style={styles.image} />
-      <Image source={require('./pathToAdditionalAccessoryImage')} style={styles.image} />
+      <Image source={require("../../assets/blue.png")} style={styles.main} />
+      <Image source={require("../../assets/red.png")} style={styles.side} />
+      <Image source={require("../../assets/blue.png")} style={styles.main} />
+      <Image source={require("../../assets/red.png")} style={styles.side} />
+      <Image source={require("../../assets/blue.png")} style={styles.main} />
+      <Image source={require("../../assets/red.png")} style={styles.side} />
+      <Image source={require("../../assets/blue.png")} style={styles.main} />
+      <Image source={require("../../assets/red.png")} style={styles.side} />
     </SafeAreaView>
   );
 };
@@ -33,11 +32,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  image: {
+  main: {
     width: 100,
     height: 100,
     margin: 10,
     resizeMode: 'contain',
+  },
+  side:{
+    position: absolute,
+    top: 20,
+    right: 100,
   },
 });
 
