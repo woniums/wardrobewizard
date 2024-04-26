@@ -12,83 +12,86 @@ import CameraScreen from "./screens/CameraScreen";
 import CreateScreen from "./screens/CreateScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import AlbumsScreen from "./screens/AlbumsScreen";
+import LoginScreen from "./screens/LoginScreen";
 
 const FeedName = "Feed";
 const CameraName = "Camera";
 const ProfileName = "Profiles";
 const CreateName = "Create";
 const AlbumsName = "Albums";
+const LoginName = "Login";
 
 // Creates the bottom navigation bar on each of the screens
 const Tab = createBottomTabNavigator();
 
 function MainContainer() {
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  const handleUserLogin = () => {
+    setIsLoggedIn(true);
+  };
   return (
     <NavigationContainer>
-      <View style={{ flex: 1}}>
-        <Tab.Navigator screenOptions={{ headerShown: false , tabBarStyle: { backgroundColor: '#010001' }}}>
-          <Tab.Screen 
-            name={FeedName} 
-            component={FeedScreen} 
-            options={{ 
-              tabBarIcon: ({ color, size }) => ( //Icons and Color added by Kaylee 
-                <Icon name= "home" size={30} color= "#90d7f8" />
-              ),
-              tabBarLabelStyle: { color: '#90d7f8' }
-            }}  
-          />
-         
-          <Tab.Screen 
-            name={CreateName} 
-            component={CreateScreen} 
-            options={{ 
-              tabBarIcon: ({ color, size }) => (
-                <Icon2 name="shirt-outline" size={30} color= "#90d7f8" />
-              ),
-              tabBarLabelStyle: { color: '#90d7f8' }
-            }}  
-          />
+      {!isLoggedIn ? (
+        <LoginScreen onLogin={handleUserLogin} />
+      ) : (
+        <View style={{ flex: 1 }}>
+          <Tab.Navigator
+            screenOptions={{ headerShown: false, tabBarStyle: { backgroundColor: "#010001" } }}
+          >
+            <Tab.Screen
+              name={FeedName}
+              component={FeedScreen}
+              options={{
+                tabBarIcon: (
+                  { color, size } //Icons and Color added by Kaylee
+                ) => <Icon name="home" size={30} color="#90d7f8" />,
+                tabBarLabelStyle: { color: "#90d7f8" },
+              }}
+            />
 
-          <Tab.Screen 
-            name={CameraName} 
-            component={CameraScreen} 
-            options={{ 
-              tabBarIcon: ({ color, size }) => (
-                <Icon3 name="camera" size={30} color="#90d7f8" />
-              ),
-              tabBarLabelStyle: { color: '#90d7f8' }
-            }}  
-          />
+            <Tab.Screen
+              name={CreateName}
+              component={CreateScreen}
+              options={{
+                tabBarIcon: ({ color, size }) => (
+                  <Icon2 name="shirt-outline" size={30} color="#90d7f8" />
+                ),
+                tabBarLabelStyle: { color: "#90d7f8" },
+              }}
+            />
 
-          <Tab.Screen 
-            name={AlbumsName} 
-            component={AlbumsScreen} 
-            options={{ 
-              tabBarIcon: ({ color, size }) => (
-                <Icon3 name="images" size={30} color="#90d7f8" />
-              ),
-              tabBarLabelStyle: { color: '#90d7f8' }
-            }}  
-          />
+            <Tab.Screen
+              name={CameraName}
+              component={CameraScreen}
+              options={{
+                tabBarIcon: ({ color, size }) => <Icon3 name="camera" size={30} color="#90d7f8" />,
+                tabBarLabelStyle: { color: "#90d7f8" },
+              }}
+            />
 
-          <Tab.Screen 
-            name={ProfileName} 
-            component={ProfileScreen} 
-            options={{ 
-              tabBarIcon: ({ color, size }) => (
-                <Icon name="meh" size={30} color= "#90d7f8" />
-              ),
-              tabBarLabelStyle: { color: '#90d7f8' }
-            }}  
-          />
-        </Tab.Navigator>
-      </View>
+            <Tab.Screen
+              name={AlbumsName}
+              component={AlbumsScreen}
+              options={{
+                tabBarIcon: ({ color, size }) => <Icon3 name="images" size={30} color="#90d7f8" />,
+                tabBarLabelStyle: { color: "#90d7f8" },
+              }}
+            />
+
+            <Tab.Screen
+              name={ProfileName}
+              component={ProfileScreen}
+              options={{
+                tabBarIcon: ({ color, size }) => <Icon name="meh" size={30} color="#90d7f8" />,
+                tabBarLabelStyle: { color: "#90d7f8" },
+              }}
+            />
+          </Tab.Navigator>
+        </View>
+      )}
     </NavigationContainer>
-    
-    
-    
   );
 }
 
 export default MainContainer;
-
