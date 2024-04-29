@@ -16,7 +16,7 @@ import LoginScreen from "./screens/LoginScreen";
 
 const FeedName = "Feed";
 const CameraName = "Camera";
-const ProfileName = "Profiles";
+const ProfileName = "Profile";
 const CreateName = "Create";
 const AlbumsName = "Albums";
 const LoginName = "Login";
