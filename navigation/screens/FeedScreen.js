@@ -1,7 +1,20 @@
 import * as React from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+  SafeAreaView,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import shirt1 from "../../assets/shirt1.png";
+import blue from "../../assets/blue.png";
+import Icon from "react-native-vector-icons/Entypo";
+import Icon2 from "react-native-vector-icons/SimpleLineIcons";
+import Icon3 from "react-native-vector-icons/Feather";
+
 const windowSize = Dimensions.get("window").width;
 const Post = ({ post }) => {
   const [showTag, setShowTag] = React.useState(false);
@@ -14,25 +27,69 @@ const Post = ({ post }) => {
     navigator.navigate("Profile");
   };
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <TouchableOpacity onPress={goToProfile}>
-        <Text>{post.username}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={showTags} style={{ marginVertical: 10 }}>
-        <View style={{ position: "relative", overflow: "hidden" }}>
-          <Image source={post.image} style={{ width: windowSize, height: windowSize }} />
+    <SafeAreaView>
+      <View
+        style={{
+          flex: 1,
+          paddingEnd: 10,
+        }}
+      >
+        <View style={{ flex: 1, flexDirection: "row", paddingLeft: 15 }}>
+          <TouchableOpacity onPress={goToProfile}>
+            <Image
+              source={blue}
+              style={{ width: 55, height: 55, borderRadius: 100, marginRight: 15 }}
+            />
+          </TouchableOpacity>
+          <View>
+            <TouchableOpacity onPress={goToProfile}>
+              <Text style={{ color: "#a7699e", fontSize: 30 }}>{post.username}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={{ color: "#a7699e", fontSize: 20 }}>
+                Purchased From: {post.purchasedFrom}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <TouchableOpacity onPress={showTags} style={{ marginVertical: 10, paddingLeft: 10 }}>
+            <View style={{ position: "relative", overflow: "hidden" }}>
+              <Image
+                source={post.image}
+                style={{ width: windowSize, height: windowSize, borderRadius: 50 }}
+              />
+            </View>
+          </TouchableOpacity>
           {showTag && (
             <View>
-              <Text style={{ color: "#a7699e" }}>{post.tags[0]}</Text>
+              <Text style={{ color: "#a7699e" }}>Tagged as: {post.tag}</Text>
             </View>
           )}
         </View>
-      </TouchableOpacity>
-      <Text style={{ color: "#a7699e" }}>
-        {post.username}:{post.caption}
-      </Text>
-      <Text style={{ color: "#a7699e" }}>Purchased From: {post.purchasedFrom}</Text>
-    </View>
+        <View style={{ flex: 1, flexDirection: "row", paddingLeft: 15 }}>
+          <TouchableOpacity>
+            <Icon name={"heart-outlined"} size={50} color={"#90d7f8"}></Icon>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Icon2 name={"bubble"} size={45} color={"#90d7f8"}></Icon2>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Icon3 name={"share"} size={45} color={"#90d7f8"}></Icon3>
+          </TouchableOpacity>
+        </View>
+        <Text style={{ color: "#a7699e", fontSize: 20, paddingLeft: 15 }}>
+          {post.username}: {post.caption}
+        </Text>
+      </View>
+      <View style={{ paddingBottom: 50 }}></View>
+    </SafeAreaView>
   );
 };
 
@@ -49,17 +106,27 @@ const GroupPostings = ({ posts }) => {
 postInfo = [
   {
     id: 1,
-    username: "Hi",
+    username: "ucasmk122",
     image: shirt1,
     tag: "Shirt",
-    caption: "Awesome caption",
+    caption:
+      "Awesome caption Awesome caption Awesome caption Awesome caption Awesome caption Awesome caption ",
+    purchasedFrom: "xyz",
+  },
+  {
+    id: 2,
+    username: "Lucasmk122",
+    image: shirt1,
+    tag: "Shirt",
+    caption:
+      "Awesome caption Awesome caption Awesome caption Awesome caption Awesome caption Awesome caption ",
     purchasedFrom: "xyz",
   },
 ];
 const FeedScreen = ({ navigation }) => {
   return (
     <ScrollView
-      style={{ backgroundColor: "#90d7f8" }}
+      style={{ backgroundColor: "#010000" }}
       contentContainerStyle={{ paddingVertical: 20 }}
     >
       <GroupPostings posts={postInfo}></GroupPostings>
