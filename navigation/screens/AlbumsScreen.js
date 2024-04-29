@@ -61,11 +61,18 @@ export default function AlbumsScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+      <TouchableOpacity
+        onPress={() => console.log("Add new album")}
+        style={{ position: "absolute", top: 20, left: 20, zIndex: 1 }}
+      >
+        <Text style={{ fontSize: 40, color: "white" }}>+</Text>
+      </TouchableOpacity>
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
         data={data}
+        style={{ marginTop: 15 }} 
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => setAlbum(item.name)}>
             <Image
@@ -75,10 +82,11 @@ export default function AlbumsScreen({ navigation }) {
               style={{
                 width: windowSize / 3,
                 height: windowSize / 3,
-                borderWidth: 1,
-                borderColor: "blue",
+                borderWidth: 7,
+                borderColor: "#a7699e",
                 resizeMode: "contain",
                 marginHorizontal: 2,
+                borderRadius:15,
               }}
             />
           </TouchableOpacity>
@@ -87,27 +95,32 @@ export default function AlbumsScreen({ navigation }) {
       {selectedAlbum && (
         <FlatList
           ListHeaderComponent={
-            <Text style={{ fontSize: 30, textAlign: "center", color: "black" }}>
+            <Text style={{ fontSize: 30, textAlign: "center", color: "#90d7f8" }}>
               {selectedAlbum}
             </Text>
           }
           data={data.find((item) => item.name === selectedAlbum).images.slice(1)}
           horizontal={false}
-          numColumns={3}
+          numColumns={2}
           renderItem={({ item }) => (
             <Image
               source={item.src}
               style={{
                 marginVertical: 3,
-                width: windowSize / 3,
-                height: windowSize / 3,
-                borderWidth: 1,
-                borderColor: "blue",
+                width: windowSize / 2.5,
+                height: windowSize / 2.5,
+                borderWidth: 7,
+                borderColor: "#90d7f8",
                 resizeMode: "contain",
-                marginHorizontal: 1,
+                marginHorizontal: 3,
+                borderRadius: 15,
               }}
             />
           )}
+          contentContainerStyle={{
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
         />
       )}
     </SafeAreaView>
