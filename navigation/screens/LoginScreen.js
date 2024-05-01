@@ -1,43 +1,41 @@
-import React, { useState, useEffect } from "react";
-import { View, Image, Text, TextInput, TouchableOpacity, Alert, Button } from "react-native";
-import { setAccountInfo, getLoginData } from "../../database";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
+import { View, TextInput, TouchableOpacity, Text, Alert } from "react-native";
+import { attemptLogin, attemptSignup, resetPassword } from "../../FirebaseFunctions/firebaseLogin";
 
 export default function LoginScreen({ navigation, onLogin }) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSignUpMode, setIsSignUpMode] = useState(true); // Default state is signup mode
 
-  //Supposed to check if your login already exist but isnt really working
-  useEffect(() => {
-    const checkLogin = async () => {
-      const loggedIn = await getLoginData(username, password);
-      setIsLoggedIn(loggedIn);
-    };
-    checkLogin();
-  }, []);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      onLogin();
-    }
-  }, [isLoggedIn, navigation]);
-
-  const attemptLogin = () => {
-    if (getLoginData(username, password)) {
-      setIsLoggedIn(true);
+  const handleAuthentication = async () => {
+    if (isSignUpMode) {
+      // If in signup mode, call attemptSignup
+      await attemptSignup(
+        email,
+        password,
+        (message) => {
+          console.log(message);
+          onLogin(); // Call onLogin if signup is successful
+        },
+        (errorMessage) => console.error("Signup error:", errorMessage)
+      );
     } else {
-      if (username.length === 0 || password.length === 0) {
-        console.log("Username or password is empty");
-        return;
-      }
-      if (setAccountInfo(username, password)) {
-        setIsLoggedIn(true);
-      } else {
-        console.log("Something went wrong with account creation");
-      }
+      // If in login mode, call attemptLogin
+      await attemptLogin(email, password, onLogin, passwordReset);
     }
   };
+  const passwordReset = (message) => {
+    Alert.alert("Incorrect Password?", message, [
+      { text: "Cancel" },
+      {
+        text: "Reset",
+        onPress: () => {
+          resetPassword(email);
+        },
+      },
+    ]);
+  };
+
   return (
     <View
       style={{
@@ -54,9 +52,10 @@ export default function LoginScreen({ navigation, onLogin }) {
           backgroundColor: "white",
           borderRadius: 10,
           fontSize: 15,
+          marginBottom: 10,
         }}
-        placeholder="Username"
-        onChangeText={(value) => setUsername(value)}
+        placeholder="Email"
+        onChangeText={(value) => setEmail(value)}
       />
       <TextInput
         style={{
@@ -65,12 +64,30 @@ export default function LoginScreen({ navigation, onLogin }) {
           backgroundColor: "white",
           borderRadius: 10,
           fontSize: 15,
+          marginBottom: 10,
         }}
         placeholder="Password"
         onChangeText={(value) => setPassword(value)}
+        secureTextEntry
       />
       <TouchableOpacity
-        styel={{
+        style={{
+          backgroundColor: isSignUpMode ? "#6db29a" : "#a7699e", // Change color based on mode
+          width: "80%",
+          height: 50,
+          borderRadius: 10,
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: 10,
+        }}
+        onPress={handleAuthentication}
+      >
+        <Text style={{ color: "white", fontSize: 15, fontWeight: "bold" }}>
+          {isSignUpMode ? "Sign Up" : "Login"}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
           backgroundColor: "#a7699e",
           width: "80%",
           height: 50,
@@ -78,9 +95,11 @@ export default function LoginScreen({ navigation, onLogin }) {
           justifyContent: "center",
           alignItems: "center",
         }}
-        onPress={attemptLogin}
+        onPress={() => setIsSignUpMode(!isSignUpMode)} // Toggle between signup and login mode
       >
-        <Text style={{ color: "white", fontSize: 15, fontWeight: "bold" }}>Login</Text>
+        <Text style={{ color: "white", fontSize: 15, fontWeight: "bold" }}>
+          {isSignUpMode ? "Already have an account? Login" : "Don't have an account? Sign Up"}
+        </Text>
       </TouchableOpacity>
     </View>
   );
