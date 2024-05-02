@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Image,
   View,
@@ -11,7 +11,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import { SelectList } from "react-native-dropdown-select-list";
-//import { uploadImageWithTag } from "../../firebase/firebaseFunctions"; // Assuming you have a function to upload images with tags to Firebase
+import { uploadImageWithTag } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Icon2 from "react-native-vector-icons/Ionicons";
 
@@ -140,22 +140,23 @@ const CameraScreen = () => {
 
   const handleTag = (value) => {
     setTag(value);
-    console.log(tag);
-    if (!tag) {
-      Alert.alert("Please add a tag before submitting.");
+
+    // Call database function`;
+    uploaded = uploadImageWithTag(image, tag);
+    if (uploaded) {
+      ////Set everything back to defaults
+      setImage([]);
+      setTag("");
+      photoTaken.current = false;
+      setTagVisible(false);
+    } else {
+      Alert.alert("Tag Failed!");
       return;
     }
-
-    if (!image) {
-      Alert.alert("Please select or capture an image before submitting.");
-      return;
-    }
-
-    //await uploadImageWithTag(image, tag);
   };
 
   const deleteImage = () => {
-    if (!image) {
+    if (!photoTaken.current) {
       Alert.alert("There is no image to delete.");
       return;
     }
@@ -168,10 +169,10 @@ const CameraScreen = () => {
       {
         text: "Delete",
         onPress: () => {
-          setImage([null]);
+          setImage([]);
           setTag("");
           photoTaken.current = false;
-          setTagVisible(false); // Hide tag selection component after deleting
+          setTagVisible(); // Hide tag selection component after deleting
         },
       },
     ]);
@@ -187,7 +188,12 @@ const CameraScreen = () => {
       }}
     >
       <View style={{ marginTop: 1 }}>
-        {photoTaken.current && ( // if image is not null
+        {!photoTaken.current && (
+          <Text style={{ fontWeight: "bold", textAlign: "center", color: "white" }}>
+            Upload a new item to tag it!
+          </Text>
+        )}
+        {photoTaken.current && ( // if image taken
           <Image
             source={{ uri: image }} // Display the selected image
             style={{
@@ -205,6 +211,8 @@ const CameraScreen = () => {
         )}
       </View>
       {tagVisible && <HandleTagImage onTag={handleTag} />}
+      {console.log(image, tag)}
+      {}
       <View
         style={{
           flexDirection: "row",

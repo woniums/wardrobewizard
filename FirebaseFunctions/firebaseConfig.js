@@ -19,6 +19,7 @@ const firebaseConfig = {
   messagingSenderId: "566247507391",
   appId: "1:566247507391:web:3aac9b85117659d5c74d0a",
   measurementId: "G-M5PKLLYZML",
+  databaseURL: "https://clothingapp-6092d-default-rtdb-firebase.com/",
 };
 
 // Initialize Firebase
