@@ -1,3 +1,6 @@
+// CREDIT: Adapted from Google Inc/Firebase
+// https://firebase.google.com/docs/auth/web/password-auth#web-modular-api
+
 import { auth } from "./firebaseConfig";
 import {
   createUserWithEmailAndPassword,
