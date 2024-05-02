@@ -11,7 +11,7 @@ import {
 export const attemptLogin = async (email, password, onLogin, passwordReset) => {
   try {
     const credentials = await signInWithEmailAndPassword(auth, email, password);
-    console.log("User logged in successfully: ", credentials.user);
+    console.log("User logged in successfully: ", credentials.user.email);
     onLogin();
   } catch (error) {
     if (error.code === "auth/invalid-credential") {
@@ -24,10 +24,10 @@ export const attemptLogin = async (email, password, onLogin, passwordReset) => {
 export const attemptSignup = async (email, password, Success, Error) => {
   try {
     const credentials = await createUserWithEmailAndPassword(auth, email, password);
-    console.log("User signed up", credentials.user);
+    console.log("User signed up", credentials.user.email);
     Success("Signup successful");
   } catch (error) {
-    console.error("Signup error:", error.message);
+    console.log("Signup error:", error.message);
     Error(error.message);
   }
 };

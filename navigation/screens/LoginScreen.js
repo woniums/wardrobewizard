@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity, Text, Alert } from "react-native";
+import { View, TextInput, TouchableOpacity, Text, Alert, Image } from "react-native";
 import { attemptLogin, attemptSignup, resetPassword } from "../../FirebaseFunctions/firebaseLogin";
+import AppIcon from "../../assets/AppIcon.jpg";
 
 export default function LoginScreen({ navigation, onLogin }) {
   const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ export default function LoginScreen({ navigation, onLogin }) {
           console.log(message);
           onLogin(); // Call onLogin if signup is successful
         },
-        (errorMessage) => console.error("Signup error:", errorMessage)
+        (errorMessage) => console.log("Signup error:", errorMessage)
       );
     } else {
       // If in login mode, call attemptLogin
@@ -45,6 +46,21 @@ export default function LoginScreen({ navigation, onLogin }) {
         backgroundColor: "#90d7f8",
       }}
     >
+      <Image
+        source={AppIcon}
+        style={{
+          marginTop: 1,
+          width: "4%",
+          height: "30%",
+          aspectRatio: 1,
+          borderWidth: 5,
+          borderColor: "#d66391",
+          borderRadius: 20,
+          alignItems: "center",
+          marginBottom: 5,
+        }}
+      ></Image>
+      <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 30 }}>Wardobe Wizard</Text>
       <TextInput
         style={{
           height: 50,
@@ -72,7 +88,7 @@ export default function LoginScreen({ navigation, onLogin }) {
       />
       <TouchableOpacity
         style={{
-          backgroundColor: isSignUpMode ? "#6db29a" : "#a7699e", // Change color based on mode
+          backgroundColor: isSignUpMode ? "#d66391" : "blue", // Change color based on mode
           width: "80%",
           height: 50,
           borderRadius: 10,
