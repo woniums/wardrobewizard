@@ -88,7 +88,7 @@ const HandleTagImage = ({ onTag }) => {
 
 const CameraScreen = () => {
   const navigator = useNavigation();
-  const [image, setImage] = useState([]);
+  const [image, setImage] = useState("");
   const [tag, setTag] = useState("");
   const [tagVisible, setTagVisible] = useState(false); // To track if tag selection component is visible
   const windowHeight = useWindowDimensions().height;
@@ -138,21 +138,13 @@ const CameraScreen = () => {
     }
   };
 
-  const handleTag = (value) => {
+  const handleTag = async (value) => {
     setTag(value);
-
-    // Call database function`;
-    uploaded = uploadImageWithTag(image, tag);
-    if (uploaded) {
-      ////Set everything back to defaults
-      setImage([]);
-      setTag("");
-      photoTaken.current = false;
-      setTagVisible(false);
-    } else {
-      Alert.alert("Tag Failed!");
-      return;
-    }
+    await uploadImageWithTag(image, "image", value);
+    setImage("");
+    setTag("");
+    photoTaken.current = false;
+    setTagVisible(); // Hide tag selection component after deleting
   };
 
   const deleteImage = () => {
@@ -169,7 +161,7 @@ const CameraScreen = () => {
       {
         text: "Delete",
         onPress: () => {
-          setImage([]);
+          setImage("");
           setTag("");
           photoTaken.current = false;
           setTagVisible(); // Hide tag selection component after deleting
