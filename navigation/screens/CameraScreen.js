@@ -14,6 +14,7 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { uploadImageWithTag } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Icon2 from "react-native-vector-icons/Ionicons";
+import Icon3 from "react-native-vector-icons/FontAwesome5";
 
 const HandleTagImage = ({ onTag }) => {
   const [selectedValue, setSelectedValue] = useState("");
@@ -144,7 +145,11 @@ const CameraScreen = () => {
     setImage("");
     setTag("");
     photoTaken.current = false;
-    setTagVisible(); // Hide tag selection component after deleting
+    setTagVisible(false); // Hide tag selection component after deleting
+  };
+
+  const goToCreate = () => {
+    navigator.navigate("Create");
   };
 
   const deleteImage = () => {
@@ -181,9 +186,18 @@ const CameraScreen = () => {
     >
       <View style={{ marginTop: 1 }}>
         {!photoTaken.current && (
-          <Text style={{ fontWeight: "bold", textAlign: "center", color: "white" }}>
-            Upload a new item to tag it!
-          </Text>
+          <View style={{ flex: "row", alignItems: "center", alignContent: "center" }}>
+            <TouchableOpacity onPress={goToCreate}>
+              <Icon2 name="shirt" size={70} color="#a7699e" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={goToCreate}>
+              <Text
+                style={{ fontWeight: "bold", textAlign: "center", color: "#d66391", marginTop: 5 }}
+              >
+                Go to Create or upload a new item!
+              </Text>
+            </TouchableOpacity>
+          </View>
         )}
         {photoTaken.current && ( // if image taken
           <Image
@@ -204,7 +218,6 @@ const CameraScreen = () => {
       </View>
       {tagVisible && <HandleTagImage onTag={handleTag} />}
       {console.log(image, tag)}
-      {}
       <View
         style={{
           flexDirection: "row",
@@ -227,14 +240,8 @@ const CameraScreen = () => {
           </TouchableOpacity>
         </View>
         <View style={{ alignItems: "center" }}>
-          <TouchableOpacity onPress={pickImage}>
-            <Icon2 name="shirt" size={70} color="#a7699e" />
-            <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ alignItems: "center" }}>
           <TouchableOpacity onPress={deleteImage}>
-            <Icon2 name="shirt" size={70} color="#a7699e" />
+            <Icon3 name="trash-alt" size={70} color="#a7699e" />
             <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>Delete</Text>
           </TouchableOpacity>
         </View>
