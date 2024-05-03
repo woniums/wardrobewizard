@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Image,
   View,
@@ -6,25 +6,26 @@ import {
   TouchableOpacity,
   Text,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import { SelectList } from "react-native-dropdown-select-list";
-import { insertImageWithTag } from "../../database";
+import { uploadImageWithTag } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Icon2 from "react-native-vector-icons/Ionicons";
+import Icon3 from "react-native-vector-icons/FontAwesome5";
 
-const HandleTagImage = ({ onTag, uri }) => {
+const HandleTagImage = ({ onTag }) => {
   const [selectedValue, setSelectedValue] = useState("");
-  const windowWidth = useWindowDimensions().width;
 
   const handleTag = () => {
     if (selectedValue) {
-      onTag({ uri, tag: selectedValue });
+      onTag(selectedValue);
       setSelectedValue("");
     }
   };
-  //https://www.npmjs.com/package/react-native-dropdown-select-list
+
   return (
     <SafeAreaView>
       <SelectList
@@ -67,7 +68,7 @@ const HandleTagImage = ({ onTag, uri }) => {
           { key: "33", value: "Athletic Wear" },
           { key: "34", value: "SwimWear" },
           { key: "35", value: "Scarf" },
-          { key: "36", value: "Jewelery" },
+          { key: "36", value: "Jewelry" },
           { key: "37", value: "Business Casual" },
         ]}
         boxStyles={{ marginHorizontal: 150, backgroundColor: "white" }}
@@ -86,15 +87,11 @@ const HandleTagImage = ({ onTag, uri }) => {
   );
 };
 
-export default function CameraScreen({ navigation }) {
-  //https://docs.expo.dev/versions/latest/sdk/imagepicker/
+const CameraScreen = () => {
   const navigator = useNavigation();
-  const [images, setImage] = useState([]);
-
-  const [currIndex, setCurrIndex] = useState(0);
-  const [tags, setTags] = useState({});
-  const [selectedTag, setSelectedTag] = useState("");
-
+  const [image, setImage] = useState("");
+  const [tag, setTag] = useState("");
+  const [tagVisible, setTagVisible] = useState(false); // To track if tag selection component is visible
   const windowHeight = useWindowDimensions().height;
   const windowWidth = useWindowDimensions().width;
   const photoTaken = useRef(false);
@@ -103,7 +100,7 @@ export default function CameraScreen({ navigation }) {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your camera!");
+      alert("You've refused to allow this app to access your camera!");
       return;
     }
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -114,9 +111,9 @@ export default function CameraScreen({ navigation }) {
     });
 
     if (!result.canceled) {
-      setImage([...images, result.assets[0].uri]);
-      setCurrIndex(currIndex + 1);
+      setImage(result.assets[0].uri);
       photoTaken.current = true;
+      setTagVisible(true); // Show tag selection component
     }
   };
 
@@ -124,7 +121,7 @@ export default function CameraScreen({ navigation }) {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your camera!");
+      alert("You've refused to allow this app to access your camera!");
       return;
     }
 
@@ -136,30 +133,46 @@ export default function CameraScreen({ navigation }) {
     });
 
     if (!result.canceled) {
-      setImage([...images, result.assets[0].uri]);
-      setCurrIndex(currIndex + 1);
+      setImage(result.assets[0].uri);
       photoTaken.current = true;
+      setTagVisible(true); // Show tag selection component
     }
   };
 
-  const handleTag = ({ uri, tag }) => {
-    setTags((prevTags) => ({
-      ...prevTags,
-      [uri]: tag,
-    }));
+  const handleTag = async (value) => {
+    setTag(value);
+    await uploadImageWithTag(image, "image", value);
+    setImage("");
+    setTag("");
+    photoTaken.current = false;
+    setTagVisible(false); // Hide tag selection component after deleting
   };
 
-  const sendToDatabase = () => {
-    if ((photoTaken.current = true)) {
-      Object.entries(tags).forEach(([uri, tag]) => {
-        insertImageWithTag(uri, tag);
-      });
-      photoTaken.current = false;
+  const goToCreate = () => {
+    navigator.navigate("Create");
+  };
+
+  const deleteImage = () => {
+    if (!photoTaken.current) {
+      Alert.alert("There is no image to delete.");
+      return;
     }
-  };
 
-  const goToCreateScreen = () => {
-    navigator.navigate("Create", { images });
+    Alert.alert("Delete Image", "Are you sure you want to delete the current image?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => {
+          setImage("");
+          setTag("");
+          photoTaken.current = false;
+          setTagVisible(); // Hide tag selection component after deleting
+        },
+      },
+    ]);
   };
 
   return (
@@ -172,9 +185,23 @@ export default function CameraScreen({ navigation }) {
       }}
     >
       <View style={{ marginTop: 1 }}>
-        {images.length > 0 && ( // if images array is not empty
+        {!photoTaken.current && (
+          <View style={{ flex: "row", alignItems: "center", alignContent: "center" }}>
+            <TouchableOpacity onPress={goToCreate}>
+              <Icon2 name="shirt" size={70} color="#a7699e" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={goToCreate}>
+              <Text
+                style={{ fontWeight: "bold", textAlign: "center", color: "#d66391", marginTop: 5 }}
+              >
+                Go to Create or upload a new item!
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {photoTaken.current && ( // if image taken
           <Image
-            source={{ uri: images[images.length - 1] }} // Displays last image
+            source={{ uri: image }} // Display the selected image
             style={{
               marginTop: 1,
               width: Math.min(windowWidth * 0.9, windowHeight * 0.9),
@@ -189,16 +216,8 @@ export default function CameraScreen({ navigation }) {
           />
         )}
       </View>
-      <View
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        {images.length > 0 && <HandleTagImage onTag={handleTag} uri={images[currIndex - 1]} />}
-
-        {sendToDatabase()}
-      </View>
+      {tagVisible && <HandleTagImage onTag={handleTag} />}
+      {console.log(image, tag)}
       <View
         style={{
           flexDirection: "row",
@@ -221,12 +240,14 @@ export default function CameraScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <View style={{ alignItems: "center" }}>
-          <TouchableOpacity onPress={goToCreateScreen}>
-            <Icon2 name="shirt" size={70} color="#a7699e" />
-            <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>Create</Text>
+          <TouchableOpacity onPress={deleteImage}>
+            <Icon3 name="trash-alt" size={70} color="#a7699e" />
+            <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>Delete</Text>
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
-}
+};
+
+export default CameraScreen;
