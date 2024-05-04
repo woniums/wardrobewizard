@@ -40,6 +40,9 @@ export default function AlbumsScreen({ navigation }) {
   const setAlbum = (albumName) => {
     setSelectedAlbum(albumName);
   };
+  const share = (item) => {
+    console.log("Sharing image", item);
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
       <TouchableOpacity
@@ -85,19 +88,21 @@ export default function AlbumsScreen({ navigation }) {
           horizontal={false}
           numColumns={2}
           renderItem={({ item }) => (
-            <Image
-              source={{ uri: item.uri }}
-              style={{
-                marginVertical: 3,
-                width: windowSize / 2.5,
-                height: windowSize / 2.5,
-                borderWidth: 7,
-                borderColor: "#90d7f8",
-                resizeMode: "contain",
-                marginHorizontal: 3,
-                borderRadius: 15,
-              }}
-            />
+            <TouchableOpacity onPress={() => share(item.uri)}>
+              <Image
+                source={{ uri: item.uri }}
+                style={{
+                  marginVertical: 3,
+                  width: windowSize / 2.5,
+                  height: windowSize / 2.5,
+                  borderWidth: 7,
+                  borderColor: "#90d7f8",
+                  resizeMode: "contain",
+                  marginHorizontal: 3,
+                  borderRadius: 15,
+                }}
+              />
+            </TouchableOpacity>
           )}
           contentContainerStyle={{
             justifyContent: "center",
