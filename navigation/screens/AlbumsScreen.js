@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   FlatList,
@@ -9,76 +9,58 @@ import {
   Image,
   SafeAreaView,
 } from "react-native";
-import shirt1 from "../../assets/shirt1.png";
-import jeans1 from "../../assets/jeans1.png";
-import shoes1 from "../../assets/shoes1.png";
+import { getUserTagsAndImages } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function AlbumsScreen({ navigation }) {
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const windowSize = Dimensions.get("window").width;
+  const [dataSet, setDataSet] = useState([{ tag: "", images: [{ uri: "", uri: "" }] }]);
 
-  const data = [
-    {
-      name: "Shirts",
-      images: [
-        { src: shirt1 },
-        { src: shirt1 },
-        { src: shirt1 },
-        { src: shirt1 },
-        { src: shirt1 },
-        { src: shirt1 },
-        { src: shirt1 },
-      ],
-    },
-    {
-      name: "Jeans",
-      images: [
-        { src: jeans1 },
-        { src: jeans1 },
-        { src: jeans1 },
-        { src: jeans1 },
-        { src: jeans1 },
-        { src: jeans1 },
-        { src: jeans1 },
-      ],
-    },
-    {
-      name: "Shoes",
-      images: [
-        { src: shoes1 },
-        { src: shoes1 },
-        { src: shoes1 },
-        { src: shoes1 },
-        { src: shoes1 },
-        { src: shoes1 },
-        { src: shoes1 },
-      ],
-    },
-  ];
+  useFocusEffect(
+    React.useCallback(() => {
+      // Fetch user tags from the database
+      getUserTagsAndImages()
+        .then((data) => {
+          // Transform data into the desired format
+          const organizeData = Object.entries(data).map((entry) => ({
+            tag: entry[0], // Accessing the tag directly from the first element of the entry
+            images: entry[1].map((obj) => ({ uri: obj.url })),
+          }));
+
+          // Store transformed data in state
+          setDataSet(organizeData);
+        })
+        .catch((error) => {
+          console.error("Error fetching user tags:", error);
+        });
+    }, [])
+  );
 
   const setAlbum = (albumName) => {
     setSelectedAlbum(albumName);
   };
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
       <TouchableOpacity
         onPress={() => console.log("Add new album")}
-        style={{ position: "absolute", top: 20, left: 20, zIndex: 1 }}
+        style={{ position: "absolute", top: 50, right: 25, zIndex: 1 }}
       >
         <Text style={{ fontSize: 40, color: "white" }}>+</Text>
       </TouchableOpacity>
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
-        data={data}
-        style={{ marginTop: 15 }} 
+        data={dataSet}
+        style={{ marginTop: 15 }}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => setAlbum(item.name)}>
+          <TouchableOpacity onPress={() => setAlbum(item.tag)}>
             <Image
-              //setting first image to be albumn cover
+              //setting first image to be album cover
               //could give user option later so im just marking it
-              source={item.images[0].src}
+              source={{
+                uri: item.images[0].uri,
+              }}
               style={{
                 width: windowSize / 3,
                 height: windowSize / 3,
@@ -86,7 +68,7 @@ export default function AlbumsScreen({ navigation }) {
                 borderColor: "#a7699e",
                 resizeMode: "contain",
                 marginHorizontal: 2,
-                borderRadius:15,
+                borderRadius: 15,
               }}
             />
           </TouchableOpacity>
@@ -99,12 +81,12 @@ export default function AlbumsScreen({ navigation }) {
               {selectedAlbum}
             </Text>
           }
-          data={data.find((item) => item.name === selectedAlbum).images.slice(1)}
+          data={dataSet.find((item) => item.tag === selectedAlbum).images.slice(1)}
           horizontal={false}
           numColumns={2}
           renderItem={({ item }) => (
             <Image
-              source={item.src}
+              source={{ uri: item.uri }}
               style={{
                 marginVertical: 3,
                 width: windowSize / 2.5,
@@ -118,8 +100,8 @@ export default function AlbumsScreen({ navigation }) {
             />
           )}
           contentContainerStyle={{
-            justifyContent: 'center',
-            alignItems: 'center'
+            justifyContent: "center",
+            alignItems: "center",
           }}
         />
       )}
