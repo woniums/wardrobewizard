@@ -76,7 +76,14 @@ const getUserTagsAndImages = async () => {
       }
       userImages[tag].push({ url });
     });
-    return userImages;
+
+    // Transform data into the desired format
+    const organizeData = Object.entries(userImages).map((entry) => ({
+      tag: entry[0], // Accessing the tag directly from the first element of the entry
+      images: entry[1].map((obj) => ({ uri: obj.url })),
+    }));
+
+    return organizeData;
   } catch (error) {
     console.log("Error fetching user tags:", error);
   }

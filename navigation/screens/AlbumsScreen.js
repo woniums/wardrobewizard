@@ -22,14 +22,8 @@ export default function AlbumsScreen({ navigation }) {
       // Fetch user tags from the database
       getUserTagsAndImages()
         .then((data) => {
-          // Transform data into the desired format
-          const organizeData = Object.entries(data).map((entry) => ({
-            tag: entry[0], // Accessing the tag directly from the first element of the entry
-            images: entry[1].map((obj) => ({ uri: obj.url })),
-          }));
-
           // Store transformed data in state
-          setDataSet(organizeData);
+          setDataSet(data);
         })
         .catch((error) => {
           console.error("Error fetching user tags:", error);
