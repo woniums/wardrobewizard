@@ -45,32 +45,34 @@ export default function AlbumsScreen({ navigation }) {
       >
         <Text style={{ fontSize: 40, color: "white" }}>+</Text>
       </TouchableOpacity>
-      <FlatList
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        data={dataSet}
-        style={{ marginTop: 15 }}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => setAlbum(item.tag)}>
-            <Image
-              //setting first image to be album cover
-              //could give user option later so im just marking it
-              source={{
-                uri: item.images[0].uri,
-              }}
-              style={{
-                width: windowSize / 3,
-                height: windowSize / 3,
-                borderWidth: 7,
-                borderColor: "#a7699e",
-                resizeMode: "contain",
-                marginHorizontal: 2,
-                borderRadius: 15,
-              }}
-            />
-          </TouchableOpacity>
-        )}
-      />
+      {Object.keys(dataSet).length !== 0 && (
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={dataSet}
+          style={{ marginTop: 15 }}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => setAlbum(item.tag)}>
+              <Image
+                //setting first image to be album cover
+                //could give user option later so im just marking it
+                source={{
+                  uri: item.images[0].uri,
+                }}
+                style={{
+                  width: windowSize / 3,
+                  height: windowSize / 3,
+                  borderWidth: 7,
+                  borderColor: "#a7699e",
+                  resizeMode: "contain",
+                  marginHorizontal: 2,
+                  borderRadius: 15,
+                }}
+              />
+            </TouchableOpacity>
+          )}
+        />
+      )}
       {selectedAlbum && (
         <FlatList
           ListHeaderComponent={

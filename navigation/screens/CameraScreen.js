@@ -199,7 +199,7 @@ const CameraScreen = () => {
             </TouchableOpacity>
           </View>
         )}
-        {photoTaken.current && ( // if image taken
+        {image !== "" && ( // if image taken
           <Image
             source={{ uri: image }} // Display the selected image
             style={{
