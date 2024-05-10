@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   FlatList,
@@ -9,89 +9,70 @@ import {
   Image,
   SafeAreaView,
 } from "react-native";
-import shirt1 from "../../assets/shirt1.png";
-import jeans1 from "../../assets/jeans1.png";
-import shoes1 from "../../assets/shoes1.png";
+import { getUserTagsAndImages } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function AlbumsScreen({ navigation }) {
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const windowSize = Dimensions.get("window").width;
+  const [dataSet, setDataSet] = useState([{ tag: "", images: [{ uri: "", uri: "" }] }]);
 
-  const data = [
-    {
-      name: "Shirts",
-      images: [
-        { src: shirt1 },
-        { src: shirt1 },
-        { src: shirt1 },
-        { src: shirt1 },
-        { src: shirt1 },
-        { src: shirt1 },
-        { src: shirt1 },
-      ],
-    },
-    {
-      name: "Jeans",
-      images: [
-        { src: jeans1 },
-        { src: jeans1 },
-        { src: jeans1 },
-        { src: jeans1 },
-        { src: jeans1 },
-        { src: jeans1 },
-        { src: jeans1 },
-      ],
-    },
-    {
-      name: "Shoes",
-      images: [
-        { src: shoes1 },
-        { src: shoes1 },
-        { src: shoes1 },
-        { src: shoes1 },
-        { src: shoes1 },
-        { src: shoes1 },
-        { src: shoes1 },
-      ],
-    },
-  ];
+  useFocusEffect(
+    React.useCallback(() => {
+      // Fetch user tags from the database
+      getUserTagsAndImages()
+        .then((data) => {
+          // Store transformed data in state
+          setDataSet(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user tags:", error);
+        });
+    }, [])
+  );
 
   const setAlbum = (albumName) => {
     setSelectedAlbum(albumName);
   };
-
+  const share = (item) => {
+    console.log("Sharing image", item);
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
       <TouchableOpacity
         onPress={() => console.log("Add new album")}
-        style={{ position: "absolute", top: 20, left: 20, zIndex: 1 }}
+        style={{ position: "absolute", top: 50, right: 25, zIndex: 1 }}
       >
         <Text style={{ fontSize: 40, color: "white" }}>+</Text>
       </TouchableOpacity>
-      <FlatList
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        data={data}
-        style={{ marginTop: 15 }} 
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => setAlbum(item.name)}>
-            <Image
-              //setting first image to be albumn cover
-              //could give user option later so im just marking it
-              source={item.images[0].src}
-              style={{
-                width: windowSize / 3,
-                height: windowSize / 3,
-                borderWidth: 7,
-                borderColor: "#a7699e",
-                resizeMode: "contain",
-                marginHorizontal: 2,
-                borderRadius:15,
-              }}
-            />
-          </TouchableOpacity>
-        )}
-      />
+      {Object.keys(dataSet).length !== 0 && (
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={dataSet}
+          style={{ marginTop: 15 }}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => setAlbum(item.tag)}>
+              <Image
+                //setting first image to be album cover
+                //could give user option later so im just marking it
+                source={{
+                  uri: item.images[0].uri,
+                }}
+                style={{
+                  width: windowSize / 3,
+                  height: windowSize / 3,
+                  borderWidth: 7,
+                  borderColor: "#a7699e",
+                  resizeMode: "contain",
+                  marginHorizontal: 2,
+                  borderRadius: 15,
+                }}
+              />
+            </TouchableOpacity>
+          )}
+        />
+      )}
       {selectedAlbum && (
         <FlatList
           ListHeaderComponent={
@@ -99,27 +80,29 @@ export default function AlbumsScreen({ navigation }) {
               {selectedAlbum}
             </Text>
           }
-          data={data.find((item) => item.name === selectedAlbum).images.slice(1)}
+          data={dataSet.find((item) => item.tag === selectedAlbum).images.slice(1)}
           horizontal={false}
           numColumns={2}
           renderItem={({ item }) => (
-            <Image
-              source={item.src}
-              style={{
-                marginVertical: 3,
-                width: windowSize / 2.5,
-                height: windowSize / 2.5,
-                borderWidth: 7,
-                borderColor: "#90d7f8",
-                resizeMode: "contain",
-                marginHorizontal: 3,
-                borderRadius: 15,
-              }}
-            />
+            <TouchableOpacity onPress={() => share(item.uri)}>
+              <Image
+                source={{ uri: item.uri }}
+                style={{
+                  marginVertical: 3,
+                  width: windowSize / 2.5,
+                  height: windowSize / 2.5,
+                  borderWidth: 7,
+                  borderColor: "#90d7f8",
+                  resizeMode: "contain",
+                  marginHorizontal: 3,
+                  borderRadius: 15,
+                }}
+              />
+            </TouchableOpacity>
           )}
           contentContainerStyle={{
-            justifyContent: 'center',
-            alignItems: 'center'
+            justifyContent: "center",
+            alignItems: "center",
           }}
         />
       )}
