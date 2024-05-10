@@ -10,64 +10,107 @@ import {
 } from "react-native";
 
 const Create = () => {
+  const [showDropdown, setShowDropdown] = useState(Array(5).fill(false));
+  const [selectedOptions, setSelectedOptions] = useState(Array(5).fill(null));
+
+  const toggleDropdown = (index) => {
+    const updatedDropdown = [...showDropdown];
+    updatedDropdown[index] = !updatedDropdown[index];
+    setShowDropdown(updatedDropdown);
+  };
+
+  const handleOptionSelect = (option, index) => {
+    const updatedOptions = [...selectedOptions];
+    updatedOptions[index] = option;
+    setSelectedOptions(updatedOptions);
+    const updatedDropdown = [...showDropdown];
+    updatedDropdown[index] = false;
+    setShowDropdown(updatedDropdown);
+  };
+
+  const dropdownOptions = [
+    require("../../assets/shirt1.png"),
+    require("../../assets/jeans1.png"),
+    require("../../assets/shoes1.png"),
+  ];
+
+  const renderDropdown = (index) => {
+    return (
+      <View style={styles.dropdown}>
+        {dropdownOptions.map((option, optionIndex) => (
+          <TouchableOpacity key={optionIndex} onPress={() => handleOptionSelect(option, index)}>
+            <Image source={option} style={styles.dropdownOptionImage} />
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Image source={require("../../assets/blue.png")} style={styles.main} />
-      <SafeAreaView style={styles.container}>
-        <Image source={require("../../assets/red.png")} style={styles.side} />
-      </SafeAreaView>
-
-      <Image source={require("../../assets/blue.png")} style={styles.main} />
-      <SafeAreaView style={styles.container}>
-        <Image source={require("../../assets/red.png")} style={styles.side} />
-      </SafeAreaView>
-      <Image source={require("../../assets/blue.png")} style={styles.main} />
-      <SafeAreaView style={styles.container}>
-        <Image source={require("../../assets/red.png")} style={styles.side} />
-      </SafeAreaView>
-      <Image source={require("../../assets/blue.png")} style={styles.main} />
-      <SafeAreaView style={styles.container}>
-        <Image source={require("../../assets/red.png")} style={styles.side} />
-      </SafeAreaView>
+      {[...Array(5)].map((_, index) => (
+        <View key={index} style={styles.container2}>
+          <TouchableOpacity onPress={() => toggleDropdown(index)}>
+            <Image source={selectedOptions[index] || require("../../assets/blue.png")} style={styles.main} />
+          </TouchableOpacity>
+          {showDropdown[index] && renderDropdown(index)}      
+        </View>
+      ))}
     </SafeAreaView>
   );
+
+  
 };
 
 const styles = StyleSheet.create({
+  background: {
+    backgroundColor: "#010001",
+  },
   container: {
     flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
-    marginTop: 55,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#010001",
+  },
+  container2: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+    position: "relative",
   },
   main: {
-    width: 150,
-    height: 150,
-    marginRight: 100,
-    marginLeft: 70,
-    marginTop: 10,
+    width: 120,
+    height: 120,
+    marginLeft:100,
+    marginRight:100,
     resizeMode: "contain",
     borderRadius: 10,
   },
   side: {
     width: 120,
     height: 120,
-    marginLeft: 60,
-    top: 20,
-    right: 100,
+    resizeMode: "contain",
     borderRadius: 10,
+    marginLeft: 10,
+  },
+  dropdown: {
+    position: "absolute",
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 5,
+    elevation: 5,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: 200,
+  },
+  dropdownOptionImage: {
+    width: 50,
+    height: 50,
+    resizeMode: "contain",
   },
 });
 
 export default Create;
-
-// temp1: headwear
-// temp2: shirt/top
-// temp3: neck accessory(tie, chain, etc.)
-// temp4: mid accessory(belt, bag, etc.)
-// temp5: wrist/arm accessory
-// temp6: pants/bottom
-// temp7: footwear
-// temp8: additional accessory
