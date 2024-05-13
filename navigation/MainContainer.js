@@ -13,6 +13,7 @@ import CreateScreen from "./screens/CreateScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import AlbumsScreen from "./screens/AlbumsScreen";
 import LoginScreen from "./screens/LoginScreen";
+import CommentScreen from "./CommentScreen.js";
 
 const FeedName = "Feed";
 const CameraName = "Camera";
@@ -20,6 +21,7 @@ const ProfileName = "Profile";
 const CreateName = "Create";
 const AlbumsName = "Albums";
 const LoginName = "Login";
+const CommentName = "Comment";
 
 // Creates the bottom navigation bar on each of the screens
 const Tab = createBottomTabNavigator();
@@ -78,6 +80,8 @@ function MainContainer() {
                 tabBarLabelStyle: { color: "#90d7f8" },
               }}
             />
+
+            <Tab.Screen name={CommentName} component={CommentScreen} />
 
             <Tab.Screen
               name={ProfileName}
