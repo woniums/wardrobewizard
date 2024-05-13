@@ -10,8 +10,8 @@ import {
 } from "react-native";
 
 const Create = () => {
-  const [showDropdown, setShowDropdown] = useState(Array(5).fill(false));
-  const [selectedOptions, setSelectedOptions] = useState(Array(5).fill(null));
+  const [showDropdown, setShowDropdown] = useState(Array(8).fill(false));
+  const [selectedOptions, setSelectedOptions] = useState(Array(8).fill(null));
 
   const toggleDropdown = (index) => {
     const updatedDropdown = [...showDropdown];
@@ -48,18 +48,19 @@ const Create = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {[...Array(5)].map((_, index) => (
+      {[...Array(8)].map((_, index) => (
         <View key={index} style={styles.container2}>
           <TouchableOpacity onPress={() => toggleDropdown(index)}>
-            <Image source={selectedOptions[index] || require("../../assets/blue.png")} style={styles.main} />
+            <Image
+              source={selectedOptions[index] || require("../../assets/blue.png")}
+              style={styles.main}
+            />
           </TouchableOpacity>
-          {showDropdown[index] && renderDropdown(index)}      
+          {showDropdown[index] && renderDropdown(index)}
         </View>
       ))}
     </SafeAreaView>
   );
-
-  
 };
 
 const styles = StyleSheet.create({
@@ -82,10 +83,8 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   main: {
-    width: 120,
-    height: 120,
-    marginLeft:100,
-    marginRight:100,
+    width: 150,
+    height: 150,
     resizeMode: "contain",
     borderRadius: 10,
   },
