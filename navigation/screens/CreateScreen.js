@@ -8,10 +8,23 @@ import {
   Image,
   useWindowDimensions,
 } from "react-native";
+import { getImagesIntoCategory } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
 
 const Create = () => {
   const [showDropdown, setShowDropdown] = useState(Array(8).fill(false));
   const [selectedOptions, setSelectedOptions] = useState(Array(8).fill(null));
+
+  const [dataSet, setDataSet] = useState([]);
+
+  useEffect(() => {
+    getImagesIntoCategory()
+      .then((data) => {
+        setDataSet(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user images:", error);
+      });
+  }, []);
 
   const toggleDropdown = (index) => {
     const updatedDropdown = [...showDropdown];

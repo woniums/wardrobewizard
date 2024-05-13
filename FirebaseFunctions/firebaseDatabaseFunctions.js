@@ -89,4 +89,89 @@ const getUserTagsAndImages = async () => {
   }
 };
 
-export { uploadImageWithTag, getUserTagsAndImages };
+//Credit: ChatGpt
+//Helped organize all the tags instead of me manually doing it
+const getCategory = (tag) => {
+  switch (tag) {
+    case "Beanie":
+    case "Cap":
+    case "Sun Hat":
+    case "Hat":
+      return "Hats";
+    case "Scarf":
+    case "Jewelry":
+      return "Accessories/Jewelry";
+    case "T-Shirt":
+    case "Shirt":
+    case "Blouse":
+    case "Dress Shirt":
+    case "Tank Top":
+    case "Halter Top":
+    case "Tube Top":
+    case "Jersey":
+    case "Jacket":
+    case "Cardigan":
+    case "Coat":
+    case "Flannel":
+    case "Sweatshirt":
+    case "Crew Neck":
+    case "Turtle Neck":
+    case "Athletic Wear":
+    case "Swimwear":
+    case "Business Casual":
+      return "Shirts";
+    case "Pant":
+    case "Dress Pant":
+    case "Sweatpant":
+    case "Short":
+    case "Jeans":
+    case "Leggings":
+    case "Skirt":
+      return "Pants";
+    case "Sneakers":
+    case "Dress Shoes":
+    case "Heels":
+    case "Flats":
+    case "Boots":
+    case "Flip Flops":
+      return "Shoes";
+    default:
+      return "Other";
+  }
+};
+
+const getImagesIntoCategory = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, auth.currentUser.email));
+    const userImagesByCategory = {};
+    const categorizedTags = {};
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const { tag, url } = data;
+
+      // Determine the category for the tag using the other function
+      const category = getCategory(tag);
+
+      if (!userImagesByCategory[category]) {
+        userImagesByCategory[category] = [];
+      }
+      userImagesByCategory[category].push({ url });
+
+      categorizedTags[tag] = true;
+    });
+
+    // Transform data into the desired format
+    const organizedData = Object.entries(userImagesByCategory).map(([category, images]) => ({
+      category,
+      images,
+    }));
+
+    console.log("User images categorized successfully:", organizedData);
+    return organizedData;
+  } catch (error) {
+    console.log("Error fetching user category images:", error);
+  }
+};
+
+export { uploadImageWithTag, getUserTagsAndImages, getImagesIntoCategory };
