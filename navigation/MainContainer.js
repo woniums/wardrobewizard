@@ -14,7 +14,7 @@ import CreateScreen from "./screens/CreateScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import AlbumsScreen from "./screens/AlbumsScreen";
 import LoginScreen from "./screens/LoginScreen";
-import CommentScreen from "./CommentScreen.js";
+import CommentScreen from "./screens/CommentScreen.js";
 
 const FeedName = "Feed";
 const CameraName = "Camera";
