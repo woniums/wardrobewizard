@@ -26,6 +26,9 @@ const Post = ({ post }) => {
   const goToProfile = () => {
     navigator.navigate("Profile");
   };
+  const goToComments = () => {
+    navigator.navigate("Comment");
+  };
   return (
     <SafeAreaView>
       <View
@@ -77,7 +80,7 @@ const Post = ({ post }) => {
           <TouchableOpacity>
             <Icon name={"heart-outlined"} size={50} color={"#90d7f8"}></Icon>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={goToComments}>
             <Icon2 name={"bubble"} size={45} color={"#90d7f8"}></Icon2>
           </TouchableOpacity>
           <TouchableOpacity>
