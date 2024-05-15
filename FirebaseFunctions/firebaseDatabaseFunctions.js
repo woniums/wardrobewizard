@@ -1,5 +1,5 @@
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { addDoc, collection, onSnapshot, getDocs } from "firebase/firestore";
+import { addDoc, collection, onSnapshot, getDocs, query, where } from "firebase/firestore";
 import { firebaseApp, storage, db, auth } from "./firebaseConfig";
 
 import "react-native-get-random-values";
@@ -54,7 +54,7 @@ const saveImageWithTag = async (fileType, url, tag) => {
   try {
     //This will change the path of the database
     // Can thus be used to list out all a users images under a tag
-    const docRef = await addDoc(collection(db, auth.currentUser.email), {
+    const docRef = await addDoc(collection(db, auth.currentUser.uid), {
       fileType,
       tag,
       url,
@@ -66,7 +66,7 @@ const saveImageWithTag = async (fileType, url, tag) => {
 };
 const getUserTagsAndImages = async () => {
   try {
-    const querySnapshot = await getDocs(collection(db, auth.currentUser.email));
+    const querySnapshot = await getDocs(collection(db, auth.currentUser.uid));
     const userImages = {};
     querySnapshot.forEach((doc) => {
       const data = doc.data();
@@ -142,7 +142,7 @@ const getCategory = (tag) => {
 
 const getImagesIntoCategory = async () => {
   try {
-    const querySnapshot = await getDocs(collection(db, auth.currentUser.email));
+    const querySnapshot = await getDocs(collection(db, auth.currentUser.uid));
     const userImagesByCategory = {};
     const categorizedTags = {};
 
@@ -178,4 +178,38 @@ const getImagesIntoCategory = async () => {
   }
 };
 
-export { uploadImageWithTag, getUserTagsAndImages, getImagesIntoCategory };
+const saveOutfit = async (outfitName, selectedImages) => {
+  try {
+    const outfitCollectionRef = collection(db, auth.currentUser.uid, "outfits", outfitName);
+    for (const [category, image] of Object.entries(selectedImages)) {
+      const docRef = await addDoc(outfitCollectionRef, {
+        category,
+        url: image.url,
+      });
+      console.log("Document saved correctly for category", category, "ID:", docRef.id);
+    }
+    console.log("Outfit saved successfully:", outfitName);
+  } catch (error) {
+    console.log(error);
+  }
+};
+const getOutfit = async (outfitName) => {
+  try {
+    const outfitCollectionRef = collection(db, auth.currentUser.uid, "outfits", outfitName);
+    const querySnapshot = await getDocs(outfitCollectionRef);
+
+    const urls = [];
+    querySnapshot.forEach((doc) => {
+      const image = doc.data();
+      urls.push(image.url);
+    });
+
+    console.log("URLs for outfit", outfitName, ":", urls);
+    return urls;
+  } catch (error) {
+    console.log("Error getting URLs for outfit", outfitName, ":", error);
+    return [];
+  }
+};
+
+export { uploadImageWithTag, getUserTagsAndImages, getImagesIntoCategory, saveOutfit, getOutfit };
