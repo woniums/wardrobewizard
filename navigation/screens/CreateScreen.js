@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -6,14 +6,40 @@ import {
   TouchableOpacity,
   Text,
   Image,
-  useWindowDimensions,
+  ScrollView,
 } from "react-native";
 import { getImagesIntoCategory } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
 
-const Create = () => {
-  const [showDropdown, setShowDropdown] = useState(Array(8).fill(false));
-  const [selectedOptions, setSelectedOptions] = useState(Array(8).fill(null));
+const ImageList = ({ images, selectedImage, onPressImage }) => (
+  <View style={{ alignItems: "center", marginBottom: 12, marginTop: 12 }}>
+    {selectedImage ? (
+      <TouchableOpacity onPress={() => onPressImage(null)}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignContent: "center",
+            borderRadius: 15,
+            borderWidth: 8,
+            borderColor: "#a7699e",
+          }}
+        >
+          <Image source={{ uri: selectedImage.url }} style={{ width: 125, height: 125 }} />
+        </View>
+      </TouchableOpacity>
+    ) : (
+      <ScrollView horizontal>
+        {images.map((image, idx) => (
+          <TouchableOpacity key={idx} onPress={() => onPressImage(image)}>
+            <Image source={{ uri: image.url }} style={{ width: 125, height: 125 }} />
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    )}
+  </View>
+);
 
+const Create = () => {
+  const [selectedImages, setSelectedImages] = useState({});
   const [dataSet, setDataSet] = useState([]);
 
   useEffect(() => {
@@ -25,104 +51,37 @@ const Create = () => {
         console.error("Error fetching user images:", error);
       });
   }, []);
-
-  const toggleDropdown = (index) => {
-    const updatedDropdown = [...showDropdown];
-    updatedDropdown[index] = !updatedDropdown[index];
-    setShowDropdown(updatedDropdown);
-  };
-
-  const handleOptionSelect = (option, index) => {
-    const updatedOptions = [...selectedOptions];
-    updatedOptions[index] = option;
-    setSelectedOptions(updatedOptions);
-    const updatedDropdown = [...showDropdown];
-    updatedDropdown[index] = false;
-    setShowDropdown(updatedDropdown);
-  };
-
-  const dropdownOptions = [
-    require("../../assets/shirt1.png"),
-    require("../../assets/jeans1.png"),
-    require("../../assets/shoes1.png"),
-  ];
-
-  const renderDropdown = (index) => {
-    return (
-      <View style={styles.dropdown}>
-        {dropdownOptions.map((option, optionIndex) => (
-          <TouchableOpacity key={optionIndex} onPress={() => handleOptionSelect(option, index)}>
-            <Image source={option} style={styles.dropdownOptionImage} />
-          </TouchableOpacity>
-        ))}
-      </View>
-    );
+  const handleImageSelect = (category, selectedImage) => {
+    if (selectedImages[category] === selectedImage) {
+      setSelectedImages((prevState) => ({
+        ...prevState,
+        [category]: null,
+      }));
+    } else {
+      setSelectedImages((prevState) => ({
+        ...prevState,
+        [category]: selectedImage,
+      }));
+    }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {[...Array(8)].map((_, index) => (
-        <View key={index} style={styles.container2}>
-          <TouchableOpacity onPress={() => toggleDropdown(index)}>
-            <Image
-              source={selectedOptions[index] || require("../../assets/blue.png")}
-              style={styles.main}
-            />
-          </TouchableOpacity>
-          {showDropdown[index] && renderDropdown(index)}
-        </View>
-      ))}
-    </SafeAreaView>
+    <View style={{ flex: 1, padding: 20, backgroundColor: "#010000" }}>
+      <SafeAreaView>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {dataSet.map((category, index) => (
+            <View key={index}>
+              <ImageList
+                images={category.images}
+                selectedImage={selectedImages[category.category]}
+                onPressImage={(image) => handleImageSelect(category.category, image)}
+              />
+            </View>
+          ))}
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  background: {
-    backgroundColor: "#010001",
-  },
-  container: {
-    flex: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#010001",
-  },
-  container2: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    margin: 10,
-    position: "relative",
-  },
-  main: {
-    width: 150,
-    height: 150,
-    resizeMode: "contain",
-    borderRadius: 10,
-  },
-  side: {
-    width: 120,
-    height: 120,
-    resizeMode: "contain",
-    borderRadius: 10,
-    marginLeft: 10,
-  },
-  dropdown: {
-    position: "absolute",
-    backgroundColor: "white",
-    padding: 10,
-    borderRadius: 5,
-    elevation: 5,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: 200,
-  },
-  dropdownOptionImage: {
-    width: 50,
-    height: 50,
-    resizeMode: "contain",
-  },
-});
 
 export default Create;

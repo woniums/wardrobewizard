@@ -166,9 +166,13 @@ const getImagesIntoCategory = async () => {
       category,
       images,
     }));
-
-    console.log("User images categorized successfully:", organizedData);
-    return organizedData;
+    const categoryOrder = ["Hats", "Accessories/Jewelry", "Shirts", "Pants", "Shoes"];
+    const inOrder = organizedData.sort((a, b) => {
+      return categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
+    });
+    //console.log("User images categorized successfully:", inOrder);
+    console.log("User images categorized successfully");
+    return inOrder;
   } catch (error) {
     console.log("Error fetching user category images:", error);
   }
