@@ -29,7 +29,7 @@ const HandleTagImage = ({ onTag }) => {
   return (
     <SafeAreaView>
       <SelectList
-        style={{ backgroundColor: "#a7699e" }}
+        style={{ backgroundColor: "#BB8BB2" }}
         setSelected={(val) => setSelectedValue(val)}
         data={[
           { key: "1", value: "T-Shirt" },
@@ -79,8 +79,8 @@ const HandleTagImage = ({ onTag }) => {
       />
       <View style={{ alignItems: "center" }}>
         <TouchableOpacity onPress={handleTag}>
-          <Icon name="tag" size={50} color="#a7699e" />
-          <Text style={{ textAlign: "center", color: "#d66391" }}>Tag </Text>
+          <Icon name="tag" size={50} color="#BB8BB2" />
+          <Text style={{ textAlign: "center", color: "#DD7EA4" }}>Tag </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -192,7 +192,7 @@ const CameraScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity onPress={goToCreate}>
               <Text
-                style={{ fontWeight: "bold", textAlign: "center", color: "#d66391", marginTop: 5 }}
+                style={{ fontWeight: "bold", textAlign: "center", color: "#DD7EA4", marginTop: 5 }}
               >
                 Go to Create or upload a new item!
               </Text>
@@ -230,19 +230,19 @@ const CameraScreen = () => {
         <View style={{ alignItems: "center", marginRight: 40 }}>
           <TouchableOpacity onPress={pickImage}>
             <Icon2 name="albums-sharp" size={70} color="#a7699e" />
-            <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>Upload</Text>
+            <Text style={{ textAlign: "center", color: "#DD7EA4", marginTop: 5 }}>Upload</Text>
           </TouchableOpacity>
         </View>
         <View style={{ alignItems: "center", marginRight: 40 }}>
           <TouchableOpacity onPress={takeImage}>
             <Icon name="camera" size={70} color="#a7699e" />
-            <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>Take Photo</Text>
+            <Text style={{ textAlign: "center", color: "#DD7EA4", marginTop: 5 }}>Take Photo</Text>
           </TouchableOpacity>
         </View>
         <View style={{ alignItems: "center" }}>
           <TouchableOpacity onPress={deleteImage}>
             <Icon3 name="trash-alt" size={70} color="#a7699e" />
-            <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>Delete</Text>
+            <Text style={{ textAlign: "center", color: "#DD7EA4", marginTop: 5 }}>Delete</Text>
           </TouchableOpacity>
         </View>
       </View>

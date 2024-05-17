@@ -46,10 +46,10 @@ const Post = ({ post }) => {
           </TouchableOpacity>
           <View>
             <TouchableOpacity onPress={goToProfile}>
-              <Text style={{ color: "#a7699e", fontSize: 30 }}>{post.username}</Text>
+              <Text style={{ color: "#BB8BB2", fontSize: 30 }}>{post.username}</Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <Text style={{ color: "#a7699e", fontSize: 20 }}>
+              <Text style={{ color: "#BB8BB2", fontSize: 20 }}>
                 Purchased From: {post.purchasedFrom}
               </Text>
             </TouchableOpacity>
@@ -72,7 +72,7 @@ const Post = ({ post }) => {
           </TouchableOpacity>
           {showTag && (
             <View>
-              <Text style={{ color: "#a7699e" }}>Tagged as: {post.tag}</Text>
+              <Text style={{ color: "#BB8BB2" }}>Tagged as: {post.tag}</Text>
             </View>
           )}
         </View>
@@ -87,7 +87,7 @@ const Post = ({ post }) => {
             <Icon3 name={"share"} size={45} color={"#90d7f8"}></Icon3>
           </TouchableOpacity>
         </View>
-        <Text style={{ color: "#a7699e", fontSize: 20, paddingLeft: 15 }}>
+        <Text style={{ color: "#BB8BB2", fontSize: 20, paddingLeft: 15 }}>
           {post.username}: {post.caption}
         </Text>
       </View>

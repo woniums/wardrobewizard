@@ -54,7 +54,7 @@ export default function LoginScreen({ navigation, onLogin }) {
           height: "30%",
           aspectRatio: 1,
           borderWidth: 5,
-          borderColor: "#d66391",
+          borderColor: "#DD7EA4",
           borderRadius: 20,
           alignItems: "center",
           marginBottom: 5,
@@ -88,7 +88,7 @@ export default function LoginScreen({ navigation, onLogin }) {
       />
       <TouchableOpacity
         style={{
-          backgroundColor: isSignUpMode ? "#d66391" : "blue", // Change color based on mode
+          backgroundColor: isSignUpMode ? "#DD7EA4" : "blue", // Change color based on mode
           width: "80%",
           height: 50,
           borderRadius: 10,
@@ -104,7 +104,7 @@ export default function LoginScreen({ navigation, onLogin }) {
       </TouchableOpacity>
       <TouchableOpacity
         style={{
-          backgroundColor: "#a7699e",
+          backgroundColor: "#BB8BB2",
           width: "80%",
           height: 50,
           borderRadius: 10,
