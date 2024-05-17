@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
-  ScrollView,
+  Alert,
 } from "react-native";
 import {
   getUserTagsAndImages,
@@ -16,6 +16,7 @@ import {
 } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
 import { useFocusEffect } from "@react-navigation/native";
 import Icon1 from "react-native-vector-icons/FontAwesome5";
+import * as Sharing from "expo-sharing";
 
 export default function AlbumsScreen({ navigation }) {
   const [selectedAlbum, setSelectedAlbum] = useState(null);
@@ -54,8 +55,21 @@ export default function AlbumsScreen({ navigation }) {
   const setAlbum = (albumName) => {
     setSelectedAlbum(albumName);
   };
-  const share = (item) => {
-    console.log("Sharing image", item);
+  const share = async (item) => {
+    Alert.alert("Do you want to share this piece?", "", [
+      {
+        text: "No",
+        onPress: () => console.log("User cancelled"),
+        style: "cancel",
+      },
+      {
+        text: "Yes",
+        onPress: async () => {
+          await Sharing.shareAsync(item, { UTI: "image" });
+          console.log("Link shared");
+        },
+      },
+    ]);
   };
   const switchPage = () => {
     setPageType(!pageType);
