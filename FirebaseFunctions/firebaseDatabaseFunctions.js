@@ -9,6 +9,7 @@ import {
   getDoc,
   setDoc,
   doc,
+  updateDoc,
 } from "firebase/firestore";
 import { firebaseApp, storage, db, auth } from "./firebaseConfig";
 
@@ -80,11 +81,13 @@ const getUserTagsAndImages = async () => {
     const userImages = {};
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      const { tag, url } = data;
-      if (!userImages[tag]) {
-        userImages[tag] = [];
+      if (doc.id !== "outfitNames") {
+        const { tag, url } = data;
+        if (!userImages[tag]) {
+          userImages[tag] = [];
+        }
+        userImages[tag].push({ url });
       }
-      userImages[tag].push({ url });
     });
 
     // Transform data into the desired format
@@ -236,7 +239,7 @@ const saveOutfit = async (outfitName, selectedImages) => {
 };
 const getOutfit = async (outfitName) => {
   try {
-    const outfitCollectionRef = collection(db, auth.currentUser.uid, "outfits");
+    const outfitCollectionRef = collection(db, auth.currentUser.uid, "outfits", outfitName);
     const querySnapshot = await getDocs(outfitCollectionRef);
 
     const urlsWithCategorys = {};
@@ -270,18 +273,17 @@ const getAllOutfits = async () => {
       outfitNames = []; // Return an empty array if the document doesn't exist
     }
 
-    const allOutfits = [];
+    const allOutfits = {};
     for (const outfitName of outfitNames) {
       const outfitRef = collection(db, auth.currentUser.uid, "outfits", outfitName);
       const outfitSnapshot = await getDocs(outfitRef);
-
+      allOutfits[outfitName] = [];
       outfitSnapshot.forEach((doc) => {
-        const data = doc.data();
-        allOutfits.push(data);
+        const url = doc.data().url;
+        allOutfits[outfitName].push(url);
       });
     }
-
-    console.log(allOutfits);
+    return allOutfits;
   } catch (error) {
     console.log(error);
   }

@@ -16,6 +16,7 @@ import {
   getOutfit,
   saveOutfit,
 } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ImageList = ({ images, selectedImage, onPressImage }) => (
   <View style={{ alignItems: "center", marginBottom: 12, marginTop: 12 }}>
@@ -49,15 +50,19 @@ const Create = () => {
   const [selectedImages, setSelectedImages] = useState({});
   const [dataSet, setDataSet] = useState([]);
 
-  useEffect(() => {
-    getImagesIntoCategory()
-      .then((data) => {
-        setDataSet(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching user images:", error);
-      });
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      // Fetch user tags from the database
+      getImagesIntoCategory()
+        .then((data) => {
+          // Store transformed data in state
+          setDataSet(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user images:", error);
+        });
+    }, [])
+  );
 
   const handleImageSelect = (category, selectedImage) => {
     if (selectedImages[category] === selectedImage) {
