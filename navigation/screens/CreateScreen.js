@@ -28,7 +28,7 @@ const ImageList = ({ images, selectedImage, onPressImage }) => (
             alignContent: "center",
             borderRadius: 15,
             borderWidth: 8,
-            borderColor: "#BB8BB2 ",
+            borderColor: "#A7699E",
           }}
         >
           <Image source={{ uri: selectedImage.url }} style={{ width: 125, height: 125 }} />
@@ -171,7 +171,7 @@ const Create = () => {
           >
             <View style={{ alignItems: "center", marginRight: 10 }}>
               <TouchableOpacity onPress={getExisting}>
-                <Icon2 name="shirt" size={70} color="#a7699e" />
+                <Icon2 name="shirt" size={70} color="#caa5c5" />
                 <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>
                   Change Existing
                 </Text>
@@ -179,7 +179,7 @@ const Create = () => {
             </View>
             <View style={{ alignItems: "center", marginRight: 10 }}>
               <TouchableOpacity onPress={createOutfit}>
-                <Icon2 name="shirt" size={70} color="#a7699e" />
+                <Icon2 name="shirt" size={70} color="#caa5c5" />
                 <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>
                   Create Outfit
                 </Text>
@@ -187,7 +187,7 @@ const Create = () => {
             </View>
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity>
-                <Icon2 name="shirt" size={70} color="#a7699e" />
+                <Icon2 name="shirt" size={70} color="#caa5c5" />
                 <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>
                   Post Outfit
                 </Text>

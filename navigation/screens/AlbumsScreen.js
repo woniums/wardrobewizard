@@ -64,7 +64,7 @@ export default function AlbumsScreen({ navigation }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
       <TouchableOpacity onPress={switchPage}>
-        <Icon1 name="sync-alt" size={40} color="#a7699e" />
+        <Icon1 name="sync-alt" size={40} color="#caa5c5" />
       </TouchableOpacity>
       {pageType ? (
         <>
@@ -87,7 +87,6 @@ export default function AlbumsScreen({ navigation }) {
                       height: windowSize / 3,
                       borderWidth: 7,
                       borderColor: "#a7699e",
-                      resizeMode: "contain",
                       marginHorizontal: 2,
                       borderRadius: 15,
                     }}
@@ -116,7 +115,6 @@ export default function AlbumsScreen({ navigation }) {
                       height: windowSize / 2.5,
                       borderWidth: 7,
                       borderColor: "#90d7f8",
-                      resizeMode: "contain",
                       marginHorizontal: 3,
                       borderRadius: 15,
                     }}
@@ -140,7 +138,9 @@ export default function AlbumsScreen({ navigation }) {
               style={{ marginTop: 15 }}
               renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => setSelectedOutfit(item)}>
-                  <Text style={{ color: "white", marginHorizontal: 10, fontSize: 30 }}>{item}</Text>
+                  <Text style={{ color: "#caa5c5", marginHorizontal: 10, fontSize: 30 }}>
+                    {item}
+                  </Text>
                 </TouchableOpacity>
               )}
             />
@@ -171,7 +171,6 @@ export default function AlbumsScreen({ navigation }) {
                         height: windowSize / 2.5,
                         borderWidth: 7,
                         borderColor: "#90d7f8",
-                        resizeMode: "contain",
                         marginHorizontal: 3,
                         borderRadius: 15,
                       }}
