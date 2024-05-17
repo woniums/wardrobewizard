@@ -1,5 +1,16 @@
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { addDoc, collection, onSnapshot, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  getDocs,
+  query,
+  where,
+  getDoc,
+  setDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { firebaseApp, storage, db, auth } from "./firebaseConfig";
 
 import "react-native-get-random-values";
@@ -70,11 +81,13 @@ const getUserTagsAndImages = async () => {
     const userImages = {};
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      const { tag, url } = data;
-      if (!userImages[tag]) {
-        userImages[tag] = [];
+      if (doc.id !== "outfitNames") {
+        const { tag, url } = data;
+        if (!userImages[tag]) {
+          userImages[tag] = [];
+        }
+        userImages[tag].push({ url });
       }
-      userImages[tag].push({ url });
     });
 
     // Transform data into the desired format
@@ -180,6 +193,37 @@ const getImagesIntoCategory = async () => {
 
 const saveOutfit = async (outfitName, selectedImages) => {
   try {
+    const docRef = doc(db, auth.currentUser.uid, "outfitNames");
+    // Retrieve the current data from the document
+    const docSnapshot = await getDoc(docRef);
+
+    if (docSnapshot.exists()) {
+      // Extract the current outfit names array
+      const data = docSnapshot.data();
+      const currentOutfitNames = data.outFitNames || [];
+
+      // Add the new outfit name to the array
+      const newOutfitNames = [...currentOutfitNames, outfitName];
+
+      // Update the document with the new array
+      await updateDoc(docRef, {
+        outFitNames: newOutfitNames,
+      });
+
+      console.log("Document successfully updated with new outfit name");
+    } else {
+      // Document does not exist, create a new one with the outfit name
+      await setDoc(docRef, {
+        outFitNames: [outfitName],
+      });
+
+      console.log("Document created and outfit name added");
+    }
+  } catch (error) {
+    console.error("Error updating or creating document: ", error);
+  }
+
+  try {
     const outfitCollectionRef = collection(db, auth.currentUser.uid, "outfits", outfitName);
     for (const [category, image] of Object.entries(selectedImages)) {
       const docRef = await addDoc(outfitCollectionRef, {
@@ -198,18 +242,58 @@ const getOutfit = async (outfitName) => {
     const outfitCollectionRef = collection(db, auth.currentUser.uid, "outfits", outfitName);
     const querySnapshot = await getDocs(outfitCollectionRef);
 
-    const urls = [];
+    const urlsWithCategorys = {};
     querySnapshot.forEach((doc) => {
-      const image = doc.data();
-      urls.push(image.url);
+      const data = doc.data();
+      const category = data.category;
+      const url = data.url;
+      urlsWithCategorys[category] = url;
     });
 
-    console.log("URLs for outfit", outfitName, ":", urls);
-    return urls;
+    console.log("URLs for outfit", outfitName, ":", urlsWithCategorys);
+    return urlsWithCategorys;
   } catch (error) {
     console.log("Error getting URLs for outfit", outfitName, ":", error);
-    return [];
+    return {};
   }
 };
 
-export { uploadImageWithTag, getUserTagsAndImages, getImagesIntoCategory, saveOutfit, getOutfit };
+const getAllOutfits = async () => {
+  try {
+    let outfitNames = [];
+    const docRef = doc(db, auth.currentUser.uid, "outfitNames");
+
+    const docSnapshot = await getDoc(docRef);
+
+    if (docSnapshot.exists()) {
+      const data = docSnapshot.data();
+      outfitNames = data.outFitNames || []; // Return the outfitNames array or an empty array if it doesn't exist
+    } else {
+      console.log("No such document!");
+      outfitNames = []; // Return an empty array if the document doesn't exist
+    }
+
+    const allOutfits = {};
+    for (const outfitName of outfitNames) {
+      const outfitRef = collection(db, auth.currentUser.uid, "outfits", outfitName);
+      const outfitSnapshot = await getDocs(outfitRef);
+      allOutfits[outfitName] = [];
+      outfitSnapshot.forEach((doc) => {
+        const url = doc.data().url;
+        allOutfits[outfitName].push(url);
+      });
+    }
+    return allOutfits;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export {
+  uploadImageWithTag,
+  getUserTagsAndImages,
+  getImagesIntoCategory,
+  saveOutfit,
+  getOutfit,
+  getAllOutfits,
+};
