@@ -9,7 +9,10 @@ import {
   Image,
   SafeAreaView,
 } from "react-native";
-import { getUserTagsAndImages } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
+import {
+  getUserTagsAndImages,
+  getAllOutfits,
+} from "../../FirebaseFunctions/firebaseDatabaseFunctions";
 import { useFocusEffect } from "@react-navigation/native";
 
 export default function AlbumsScreen({ navigation }) {
@@ -40,7 +43,7 @@ export default function AlbumsScreen({ navigation }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
       <TouchableOpacity
-        onPress={() => console.log("Add new album")}
+        onPress={() => getAllOutfits()}
         style={{ position: "absolute", top: 50, right: 25, zIndex: 1 }}
       >
         <Text style={{ fontSize: 40, color: "white" }}>+</Text>

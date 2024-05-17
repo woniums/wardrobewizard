@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import Icon2 from "react-native-vector-icons/Ionicons";
 import {
+  getAllOutfits,
   getImagesIntoCategory,
   getOutfit,
   saveOutfit,
@@ -111,6 +112,38 @@ const Create = () => {
     }
   };
 
+  const getExisting = async () => {
+    try {
+      //Prompt the user for a name for the outfit (makes storing easier rn)
+      const userInputPromise = new Promise((resolve, reject) => {
+        Alert.prompt("Enter Outfit Name", "Please enter an outfit name:", [
+          {
+            text: "Cancel",
+            onPress: () => reject("User cancelled"),
+            style: "cancel",
+          },
+          {
+            text: "OK",
+            onPress: (inputText) => {
+              const outfitName = inputText.trim();
+              if (outfitName !== "") {
+                resolve(outfitName);
+              }
+              reject("Invalid");
+            },
+          },
+        ]);
+      });
+
+      const outfitName = await userInputPromise;
+
+      overrideSelection = await getOutfit(outfitName);
+      setSelectedImages(overrideSelection);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={{ flex: 1, padding: 20, backgroundColor: "#010000" }}>
       <SafeAreaView>
@@ -124,15 +157,37 @@ const Create = () => {
               />
             </View>
           ))}
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <TouchableOpacity onPress={createOutfit}>
-              <Icon2 name="shirt" size={70} color="#a7699e" />
-            </TouchableOpacity>
-            <Text
-              style={{ fontWeight: "bold", textAlign: "center", color: "#d66391", marginTop: 5 }}
-            >
-              Create Outfit
-            </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <View style={{ alignItems: "center", marginRight: 10 }}>
+              <TouchableOpacity onPress={getExisting}>
+                <Icon2 name="shirt" size={70} color="#a7699e" />
+                <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>
+                  Change Existing
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ alignItems: "center", marginRight: 10 }}>
+              <TouchableOpacity onPress={createOutfit}>
+                <Icon2 name="shirt" size={70} color="#a7699e" />
+                <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>
+                  Create Outfit
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <TouchableOpacity>
+                <Icon2 name="shirt" size={70} color="#a7699e" />
+                <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>
+                  Post Outfit
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </SafeAreaView>
