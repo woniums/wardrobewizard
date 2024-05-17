@@ -40,8 +40,8 @@ function MainContainer() {
         <LoginScreen onLogin={handleUserLogin} />
       ) : (
         <Stack.Navigator>
-          <Stack.Screen name="Back" component={MainTabs} options={{ headerShown: false }} />
-          <Stack.Screen name={CommentName} component={CommentScreen} />
+          <Stack.Screen name="Back" component={MainTabs}  options={{ headerShown: false, headerStyle: {backgroundColor: '#010001', }}} />
+          <Stack.Screen name={CommentName} component={CommentScreen} options={{ headerShown: false, headerStyle: {backgroundColor: '#010001', }}}/>
         </Stack.Navigator>
       )}
     </NavigationContainer>
