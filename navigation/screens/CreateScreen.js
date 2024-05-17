@@ -20,7 +20,7 @@ const ImageList = ({ images, selectedImage, onPressImage }) => (
             alignContent: "center",
             borderRadius: 15,
             borderWidth: 8,
-            borderColor: "#a7699e",
+            borderColor: "#BB8BB2 ",
           }}
         >
           <Image source={{ uri: selectedImage.url }} style={{ width: 125, height: 125 }} />

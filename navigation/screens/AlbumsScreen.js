@@ -63,7 +63,7 @@ export default function AlbumsScreen({ navigation }) {
                   width: windowSize / 3,
                   height: windowSize / 3,
                   borderWidth: 7,
-                  borderColor: "#a7699e",
+                  borderColor: "#BB8BB2 ",
                   resizeMode: "contain",
                   marginHorizontal: 2,
                   borderRadius: 15,
