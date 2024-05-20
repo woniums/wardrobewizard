@@ -1,86 +1,113 @@
-import React from 'react';
-import { View, Text, Button, SafeAreaView, StyleSheet, TextInput , FlatList, Image, Dimensions} from "react-native";
-import red from "../../assets/red.png";
-import blue from "../../assets/blue.png";
-import shirt1 from "../../assets/shirt1.png";
-import jeans1 from "../../assets/jeans1.png";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+  SafeAreaView,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import { getAllOutfits } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
+import * as Sharing from "expo-sharing";
 
-
-const data = [
-  { id: '1', src: require("../../assets/shirt1.png") },
-  { id: '2', src: require("../../assets/shirt1.png") },
-  { id: '3', src: require("../../assets/shirt1.png") },
-  { id: '4', src: require("../../assets/jeans1.png") },
-  { id: '5', src: require("../../assets/jeans1.png") },
-  { id: '6', src: require("../../assets/jeans1.png") },
-  { id: '7', src: require("../../assets/shoes1.png") },
-  { id: '8', src: require("../../assets/shoes1.png") },
-  { id: '9', src: require("../../assets/shoes1.png") },
-];
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 const numColumns = 3;
 const itemWidth = width / numColumns;
 
+export default function ProfileScreen({ navigation }) {
+  const [outfitSet, setOutfitSet] = useState({});
+  const [loading, setLoading] = useState(true);
 
-const Profile = () => {
-  const renderItem = ({ item }) => (
-    <Image source={item.src} style={styles.postImage} />
+  useFocusEffect(
+    React.useCallback(() => {
+      getAllOutfits()
+        .then((data) => {
+          setOutfitSet(data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log("Error fetching user tags and images:", error);
+          setLoading(false);
+        });
+    }, [])
   );
-  
+  const shareClothing = async (item) => {
+    Alert.alert("Do you want to share this piece of clothing?", "", [
+      {
+        text: "No",
+        onPress: () => console.log("User cancelled"),
+        style: "cancel",
+      },
+      {
+        text: "Yes",
+        onPress: async () => {
+          await Sharing.shareAsync(item, { UTI: "image" });
+          console.log("Link shared");
+        },
+      },
+    ]);
+  };
+  //This creates a Flatlist inside of Flatlist so that the outfits are able to be strung vertically
+  const renderOutfit = ({ item }) => {
+    return (
+      <FlatList
+        data={item}
+        horizontal={false}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => shareClothing(item)}>
+            <Image source={{ uri: item }} style={styles.outfitItem} />
+          </TouchableOpacity>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={styles.outfitContainer}
+      />
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topHalf}>
-      <Image
-        source={require("../../assets/blue.png")}
-        style={styles.pfp}
-      />
+        <Image source={require("../../assets/blue.png")} style={styles.pfp} />
       </View>
-      <TextInput
-        style={styles.username}
-        placeholder='Username'
-      />
-      <TextInput
-        multiline
-        maxLength={66}
-        style={styles.bio}
-        placeholder="Enter Bio Here:"
-      />
-      
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        numColumns={numColumns}
+      <TextInput style={styles.username} placeholder="Username" />
+      <TextInput multiline maxLength={66} style={styles.bio} placeholder="Enter Bio Here:" />
 
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#90d7f8" />
+      ) : (
+        <FlatList
+          data={Object.values(outfitSet)}
+          numColumns={numColumns}
+          renderItem={renderOutfit}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.flatListContent}
+        />
+      )}
     </SafeAreaView>
   );
-};
+}
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
-    backgroundColor: '#010010',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#010010",
+    justifyContent: "center",
+    alignItems: "center",
   },
   topHalf: {
-    alignItems: "screenLeft",
+    alignItems: "flex-start",
   },
   username: {
     fontSize: 20,
-    fontWeight: 'bold',
-    backgroundColor: '#caa5c5',
+    fontWeight: "bold",
+    backgroundColor: "#caa5c5",
     padding: 5,
     borderRadius: 10,
-  },
-  postImage: {
-    width: 120,
-    height: 120,
-    borderRadius:10,
-    margin: 2,
-    backgroundColor: '#caa5c5',
-    
   },
   bio: {
     width: 350,
@@ -89,18 +116,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 70,
     padding: 10,
-    backgroundColor: '#caa5c5',
+    backgroundColor: "#caa5c5",
     borderRadius: 10,
-
-  }, 
+  },
   pfp: {
     width: 75,
     height: 75,
     borderRadius: 100,
     margin: 10,
-
-  }
-});
-
-
-export default Profile;
+  },
+  outfitContainer: {
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
+  outfitItem: {
+    width: 120,
+    height: 120,
+    borderRadius: 10,
+    margin: 2,
+    backgroundColor: "#caa5c5",
+  },
+};
