@@ -277,11 +277,24 @@ const getAllOutfits = async () => {
     for (const outfitName of outfitNames) {
       const outfitRef = collection(db, auth.currentUser.uid, "outfits", outfitName);
       const outfitSnapshot = await getDocs(outfitRef);
-      allOutfits[outfitName] = [];
+      const outfits = [];
       outfitSnapshot.forEach((doc) => {
-        const url = doc.data().url;
-        allOutfits[outfitName].push(url);
+        outfits.push(doc.data());
       });
+
+      // Sort outfits based on category order
+      outfits.sort((a, b) => {
+        const categoryOrder = {
+          Hats: 0,
+          Shirts: 1,
+          Pants: 2,
+          Shoes: 3,
+        };
+        return categoryOrder[a.category] - categoryOrder[b.category];
+      });
+
+      const urls = outfits.map((outfit) => outfit.url);
+      allOutfits[outfitName] = urls;
     }
     return allOutfits;
   } catch (error) {
