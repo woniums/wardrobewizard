@@ -183,8 +183,7 @@ const getImagesIntoCategory = async () => {
     const inOrder = organizedData.sort((a, b) => {
       return categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
     });
-    //console.log("User images categorized successfully:", inOrder);
-    console.log("User images categorized successfully");
+    //console.log("User images categorized successfully");
     return inOrder;
   } catch (error) {
     console.log("Error fetching user category images:", error);
@@ -301,6 +300,107 @@ const getAllOutfits = async () => {
     console.log(error);
   }
 };
+const saveProfile = async (imageURI, username, bio) => {
+  try {
+    // Fetch the image as a blob
+    // Work around since easy way was broken with expo
+    // Credit: sjchmiela
+    // Source: https://github.com/expo/expo/issues/2402#issuecomment-443726662
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", imageURI, true);
+      xhr.send(null);
+    });
+
+    // CREDIT TO: Code with Beto, absolute goat
+    // Source https://www.youtube.com/watch?v=cq5TGA6sBQQ
+    const storageRef = ref(storage, "profilePictures/" + uuidv4());
+    const uploadImage = uploadBytesResumable(storageRef, blob);
+    uploadImage.on(
+      "state_change",
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Progress", progress);
+      },
+      (error) => {
+        console.error(error);
+      },
+      () => {
+        getDownloadURL(uploadImage.snapshot.ref).then(async (downloadURl) => {
+          console.log("File available at", downloadURl);
+          await saveProfilePicture(downloadURl);
+          await saveBio(bio);
+          await saveUsername(username);
+        });
+      }
+    );
+  } catch (error) {
+    console.log("Error uploading image:", error);
+  }
+};
+
+const saveProfilePicture = async (profilePic) => {
+  try {
+    const docRef = doc(db, auth.currentUser.uid, "Profile", "userInfo", "profilePic");
+    await setDoc(docRef, { profilePic });
+    console.log("Profile picture saved", docRef.id);
+  } catch (error) {
+    console.log(error);
+  }
+};
+const saveUsername = async (username) => {
+  try {
+    const docRef = doc(db, auth.currentUser.uid, "Profile", "userInfo", "username");
+    await setDoc(docRef, { username }, { merge: true });
+    console.log("Username saved", docRef.id);
+  } catch (error) {
+    console.log(error);
+  }
+};
+const saveBio = async (bio) => {
+  try {
+    const docRef = doc(db, auth.currentUser.uid, "Profile", "userInfo", "bio");
+    await setDoc(docRef, { bio }, { merge: true });
+    console.log("Bio saved", docRef.id);
+  } catch (error) {
+    console.log(error);
+  }
+};
+const getProfile = async () => {
+  try {
+    let profileData = { username: "", bio: "", pfp: "" };
+    const usernameRef = doc(db, auth.currentUser.uid, "Profile", "userInfo", "username");
+    const bioRef = doc(db, auth.currentUser.uid, "Profile", "userInfo", "bio");
+    const pfpRef = doc(db, auth.currentUser.uid, "Profile", "userInfo", "profilePic");
+    const usernameSnapshot = await getDoc(usernameRef);
+    const bioSnapshot = await getDoc(bioRef);
+    const pfpSnapshot = await getDoc(pfpRef);
+
+    if (usernameSnapshot.exists() && bioSnapshot.exists && pfpSnapshot.exists()) {
+      const username = usernameSnapshot.data().username;
+      const bio = bioSnapshot.data().bio;
+      const pfp = pfpSnapshot.data().profilePic;
+      profileData["username"] = username;
+      profileData["bio"] = bio;
+      profileData["pfp"] = pfp;
+    } else {
+      console.log("No such document!");
+      // Return an empty dictionary if any of the documents dont exist
+      return profileData;
+    }
+    return profileData;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export {
   uploadImageWithTag,
@@ -309,4 +409,6 @@ export {
   saveOutfit,
   getOutfit,
   getAllOutfits,
+  saveProfile,
+  getProfile,
 };

@@ -12,8 +12,10 @@ import {
   Alert,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { getAllOutfits } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
+import { getProfile, getAllOutfits } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
 import * as Sharing from "expo-sharing";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
 const numColumns = 3;
@@ -22,6 +24,8 @@ const itemWidth = width / numColumns;
 export default function ProfileScreen({ navigation }) {
   const [outfitSet, setOutfitSet] = useState({});
   const [loading, setLoading] = useState(true);
+  const [profileData, setProfileData] = useState({ username: "", bio: "", pfp: "" });
+  const navigator = useNavigation();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -36,6 +40,20 @@ export default function ProfileScreen({ navigation }) {
         });
     }, [])
   );
+  useFocusEffect(
+    React.useCallback(() => {
+      getProfile()
+        .then((data) => {
+          setProfileData(data);
+          setLoadingpfp(false);
+        })
+        .catch((error) => {
+          console.log("Error fetching profile data:", error);
+          setLoadingpfp(false);
+        });
+    }, [])
+  );
+
   const shareClothing = async (item) => {
     Alert.alert("Do you want to share this piece of clothing?", "", [
       {
@@ -68,14 +86,25 @@ export default function ProfileScreen({ navigation }) {
       />
     );
   };
+  const editProfile = () => {
+    navigator.navigate("Edit Profile");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.topHalf}>
-        <Image source={require("../../assets/blue.png")} style={styles.pfp} />
+      <View style={styles.iconContainer}>
+        <TouchableOpacity onPress={() => editProfile()}>
+          <Icon name="edit" size={30} color="#caa5c5" />
+        </TouchableOpacity>
       </View>
-      <TextInput style={styles.username} placeholder="Username" />
-      <TextInput multiline maxLength={66} style={styles.bio} placeholder="Enter Bio Here:" />
+      <View style={styles.topHalf}>
+        <Image
+          source={profileData.pfp ? { uri: profileData.pfp } : require("../../assets/blue.png")}
+          style={styles.pfp}
+        />
+      </View>
+      <Text style={styles.username}>{profileData.username}</Text>
+      <Text style={styles.bio}>{profileData.bio}</Text>
 
       {loading ? (
         <ActivityIndicator size="large" color="#90d7f8" />
@@ -100,24 +129,34 @@ const styles = {
     alignItems: "center",
   },
   topHalf: {
-    alignItems: "flex-start",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  },
+  iconContainer: {
+    alignSelf: "flex-end",
+    marginTop: 10,
+    marginRight: 10,
   },
   username: {
     fontSize: 20,
     fontWeight: "bold",
     backgroundColor: "#caa5c5",
     padding: 5,
-    borderRadius: 10,
+    borderRadius: 12,
+    marginBottom: 8,
+    width: "90%",
   },
   bio: {
-    width: 350,
-    margin: 10,
-    fontSize: 16,
-    borderWidth: 1,
-    height: 70,
-    padding: 10,
+    fontSize: 15,
+    borderWidth: 7,
+    borderColor: "#caa5c5",
     backgroundColor: "#caa5c5",
-    borderRadius: 10,
+    borderRadius: 12,
+    width: "90%",
+    height: 60,
+    textAlignVertical: "top",
+    marginBottom: 10,
   },
   pfp: {
     width: 75,
@@ -132,8 +171,9 @@ const styles = {
   outfitItem: {
     width: 120,
     height: 120,
-    borderRadius: 10,
+    borderWidth: 7,
+    borderRadius: 15,
     margin: 2,
-    backgroundColor: "#caa5c5",
+    borderColor: "#000000",
   },
 };
