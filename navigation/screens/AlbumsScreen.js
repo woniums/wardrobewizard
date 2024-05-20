@@ -27,6 +27,8 @@ export default function AlbumsScreen({ navigation }) {
   const [dataSet, setDataSet] = useState([{ tag: "", images: [{ uri: "", uri: "" }] }]);
   const [outfitSet, setOutfitSet] = useState({ "": [""] });
   const [pageType, setPageType] = useState(true);
+  const [loadingImages, setLoadingImages] = useState(true);
+  const [loadingOutfits, setLoadingOutfits] = useState(true);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -35,9 +37,11 @@ export default function AlbumsScreen({ navigation }) {
         .then((data) => {
           // Stores return data in state
           setDataSet(data);
+          setLoadingImages(false);
         })
         .catch((error) => {
-          console.error("Error fetching user tags and images:", error);
+          console.log("Error fetching user tags and images:", error);
+          setLoadingImages(false);
         });
     }, [])
   );
@@ -47,9 +51,11 @@ export default function AlbumsScreen({ navigation }) {
       getAllOutfits()
         .then((data) => {
           setOutfitSet(data);
+          setLoadingOutfits(false);
         })
         .catch((error) => {
-          console.error("Error fetching user tags and images:", error);
+          console.log("Error fetching user tags and images:", error);
+          setLoadingOutfits(false);
         });
     }, [])
   );
@@ -132,7 +138,9 @@ export default function AlbumsScreen({ navigation }) {
               <Icon2 name="share" size={40} color="#caa5c5" />
             </TouchableOpacity>
           </View>
-          {Object.keys(dataSet).length !== 0 && (
+          {Object.keys(dataSet).length !== 0 && loadingImages ? (
+            <Text>Go to the camera to take pictures!</Text>
+          ) : (
             <FlatList
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -202,7 +210,9 @@ export default function AlbumsScreen({ navigation }) {
               <Icon2 name="share" size={40} color="#caa5c5" />
             </TouchableOpacity>
           </View>
-          {Object.keys(outfitSet).length !== 0 && (
+          {Object.keys(outfitSet).length !== 0 && loadingOutfits ? (
+            <Text>Go to the create screen to make an outfit!</Text>
+          ) : (
             <FlatList
               horizontal
               showsHorizontalScrollIndicator={false}
