@@ -45,11 +45,9 @@ export default function ProfileScreen({ navigation }) {
       getProfile()
         .then((data) => {
           setProfileData(data);
-          setLoadingpfp(false);
         })
         .catch((error) => {
           console.log("Error fetching profile data:", error);
-          setLoadingpfp(false);
         });
     }, [])
   );
