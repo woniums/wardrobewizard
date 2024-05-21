@@ -15,6 +15,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import AlbumsScreen from "./screens/AlbumsScreen";
 import LoginScreen from "./screens/LoginScreen";
 import CommentScreen from "./screens/CommentScreen.js";
+import EditProfileScreen from "./screens/EditProfileScreen";
 
 const FeedName = "Feed";
 const CameraName = "Camera";
@@ -23,6 +24,7 @@ const CreateName = "Create";
 const AlbumsName = "Albums";
 const LoginName = "Login";
 const CommentName = "Comment";
+const EditProfileName = "Edit Profile";
 
 // Creates the bottom navigation bar on each of the screens
 const Tab = createBottomTabNavigator();
@@ -40,8 +42,21 @@ function MainContainer() {
         <LoginScreen onLogin={handleUserLogin} />
       ) : (
         <Stack.Navigator>
-          <Stack.Screen name="Back" component={MainTabs}  options={{ headerShown: false, headerStyle: {backgroundColor: '#010001', }}} />
-          <Stack.Screen name={CommentName} component={CommentScreen} options={{ headerShown: false, headerStyle: {backgroundColor: '#010001', }}}/>
+          <Stack.Screen
+            name="Back"
+            component={MainTabs}
+            options={{ headerShown: false, headerStyle: { backgroundColor: "#010001" } }}
+          />
+          <Stack.Screen
+            name={CommentName}
+            component={CommentScreen}
+            options={{ headerShown: false, headerStyle: { backgroundColor: "#010001" } }}
+          />
+          <Stack.Screen
+            name={EditProfileName}
+            component={EditProfileScreen}
+            options={{ headerShown: true, headerStyle: { backgroundColor: "#000000" } }}
+          />
         </Stack.Navigator>
       )}
     </NavigationContainer>
