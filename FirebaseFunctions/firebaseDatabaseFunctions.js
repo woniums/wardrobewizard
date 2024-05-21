@@ -401,6 +401,20 @@ const getProfile = async () => {
     console.log(error);
   }
 };
+const savePost = async (outfitURIs, pfpURI, username, purchasedFrom, bio) => {
+  try {
+    const docRef = await addDoc(collection(db, "Posts"), {
+      outfitURIs,
+      pfpURI,
+      username,
+      purchasedFrom,
+      bio,
+    });
+    console.log("Document saved correctly", docRef.id);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export {
   uploadImageWithTag,
@@ -411,4 +425,5 @@ export {
   getAllOutfits,
   saveProfile,
   getProfile,
+  savePost,
 };

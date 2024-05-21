@@ -17,14 +17,10 @@ import Icon3 from "react-native-vector-icons/Feather";
 
 const windowSize = Dimensions.get("window").width;
 const Post = ({ post }) => {
-  const [showTag, setShowTag] = React.useState(false);
   const navigator = useNavigation();
 
-  const showTags = () => {
-    setShowTag(!showTag);
-  };
   const goToProfile = () => {
-    navigator.navigate("Profile");
+    navigator.navigate("Make Post");
   };
   const goToComments = () => {
     navigator.navigate("Comment");
@@ -49,7 +45,7 @@ const Post = ({ post }) => {
               <Text style={{ color: "#BB8BB2", fontSize: 30 }}>{post.username}</Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <Text style={{ color: "#BB8BB2", fontSize: 20 }}>
+              <Text style={{ color: "#BB8BB2", fontSize: 15 }}>
                 Purchased From: {post.purchasedFrom}
               </Text>
             </TouchableOpacity>
@@ -62,7 +58,7 @@ const Post = ({ post }) => {
             justifyContent: "center",
           }}
         >
-          <TouchableOpacity onPress={showTags} style={{ marginVertical: 10, paddingLeft: 10 }}>
+          <TouchableOpacity style={{ marginVertical: 10, paddingLeft: 10 }}>
             <View style={{ position: "relative", overflow: "hidden" }}>
               <Image
                 source={post.image}
@@ -70,11 +66,6 @@ const Post = ({ post }) => {
               />
             </View>
           </TouchableOpacity>
-          {showTag && (
-            <View>
-              <Text style={{ color: "#BB8BB2" }}>Tagged as: {post.tag}</Text>
-            </View>
-          )}
         </View>
         <View style={{ flex: 1, flexDirection: "row", paddingLeft: 15 }}>
           <TouchableOpacity>
@@ -111,7 +102,6 @@ postInfo = [
     id: 1,
     username: "ucasmk122",
     image: shirt1,
-    tag: "Shirt",
     caption:
       "Awesome caption Awesome caption Awesome caption Awesome caption Awesome caption Awesome caption ",
     purchasedFrom: "xyz",
@@ -120,7 +110,6 @@ postInfo = [
     id: 2,
     username: "Lucasmk122",
     image: shirt1,
-    tag: "Shirt",
     caption:
       "Awesome caption Awesome caption Awesome caption Awesome caption Awesome caption Awesome caption ",
     purchasedFrom: "xyz",
