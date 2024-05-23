@@ -31,7 +31,7 @@ export default function PostOutfit({ navigation }) {
   const [loadingOutfits, setLoadingOutfits] = useState(true);
   const [username, setUsername] = useState("");
   const [pfp, setPfp] = useState("");
-  const [bio, setBio] = useState("Click to edit your caption!");
+  const [caption, setCaption] = useState("Check out this outfit");
   const [purchasedFrom, setPurchasedFrom] = useState("");
   const navigator = useNavigation();
 
@@ -67,8 +67,8 @@ export default function PostOutfit({ navigation }) {
     console.log(pfp);
     console.log(username);
     console.log(purchasedFrom);
-    console.log(bio);
-    await savePost(outfitSet[selectedOutfit], pfp, username, purchasedFrom, bio);
+    console.log(caption);
+    await savePost(outfitSet[selectedOutfit], purchasedFrom, caption);
     navigator.navigate("Feed");
   };
 
@@ -125,7 +125,7 @@ export default function PostOutfit({ navigation }) {
                       multiline={false}
                       maxLength={30}
                       style={{ color: "#BB8BB2", fontSize: 15 }}
-                      value={"Abercombie, Target, J-Crew,..."}
+                      placeholder="Abercombie, Target, J-Crew,..."
                       onChangeText={setPurchasedFrom}
                     />
                   </TouchableOpacity>
@@ -173,8 +173,8 @@ export default function PostOutfit({ navigation }) {
                 multiline={false}
                 maxLength={30}
                 style={{ color: "#BB8BB2", fontSize: 20, paddingLeft: 15 }}
-                value={bio}
-                onChangeText={setBio}
+                placeholder="Click to edit your caption!"
+                onChangeText={setCaption}
               />
               <View style={{ width: windowSize, paddingHorizontal: 20 }}>
                 <TouchableOpacity

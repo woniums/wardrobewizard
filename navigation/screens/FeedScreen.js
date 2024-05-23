@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,23 +7,25 @@ import {
   ScrollView,
   Dimensions,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import shirt1 from "../../assets/shirt1.png";
 import blue from "../../assets/blue.png";
 import Icon from "react-native-vector-icons/Entypo";
 import Icon2 from "react-native-vector-icons/SimpleLineIcons";
 import Icon3 from "react-native-vector-icons/Feather";
+import { getAllPosts } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
 
 const windowSize = Dimensions.get("window").width;
 const Post = ({ post }) => {
   const navigator = useNavigation();
 
-  const goToProfile = () => {
-    navigator.navigate("Make Post");
+  const goToProfile = (username) => {
+    navigator.navigate("Profile", { user: username });
   };
-  const goToComments = () => {
-    navigator.navigate("Comment");
+  const goToComments = (id) => {
+    navigator.navigate("Comment", { postID: id });
   };
   return (
     <SafeAreaView>
@@ -34,14 +36,14 @@ const Post = ({ post }) => {
         }}
       >
         <View style={{ flex: 1, flexDirection: "row", paddingLeft: 15 }}>
-          <TouchableOpacity onPress={goToProfile}>
+          <TouchableOpacity onPress={() => goToProfile(post.username)}>
             <Image
-              source={blue}
+              source={{ uri: post.pfp }}
               style={{ width: 55, height: 55, borderRadius: 100, marginRight: 15 }}
             />
           </TouchableOpacity>
           <View>
-            <TouchableOpacity onPress={goToProfile}>
+            <TouchableOpacity onPress={() => goToProfile(post.username)}>
               <Text style={{ color: "#BB8BB2", fontSize: 30 }}>{post.username}</Text>
             </TouchableOpacity>
             <TouchableOpacity>
@@ -58,20 +60,26 @@ const Post = ({ post }) => {
             justifyContent: "center",
           }}
         >
-          <TouchableOpacity style={{ marginVertical: 10, paddingLeft: 10 }}>
-            <View style={{ position: "relative", overflow: "hidden" }}>
-              <Image
-                source={post.image}
-                style={{ width: windowSize, height: windowSize, borderRadius: 50 }}
-              />
+          {post.outfitUris.map((uri, index) => (
+            <View key={index} style={{ marginVertical: 10 }}>
+              <TouchableOpacity>
+                <Image
+                  source={{ uri: uri }}
+                  style={{
+                    width: windowSize / 3,
+                    height: windowSize / 3,
+                    borderRadius: 20,
+                  }}
+                />
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+          ))}
         </View>
         <View style={{ flex: 1, flexDirection: "row", paddingLeft: 15 }}>
           <TouchableOpacity>
             <Icon name={"heart-outlined"} size={50} color={"#90d7f8"}></Icon>
           </TouchableOpacity>
-          <TouchableOpacity onPress={goToComments}>
+          <TouchableOpacity onPress={() => goToComments(post.id)}>
             <Icon2 name={"bubble"} size={45} color={"#90d7f8"}></Icon2>
           </TouchableOpacity>
           <TouchableOpacity>
@@ -97,31 +105,47 @@ const GroupPostings = ({ posts }) => {
   );
 };
 
-postInfo = [
-  {
-    id: 1,
-    username: "ucasmk122",
-    image: shirt1,
-    caption:
-      "Awesome caption Awesome caption Awesome caption Awesome caption Awesome caption Awesome caption ",
-    purchasedFrom: "xyz",
-  },
-  {
-    id: 2,
-    username: "Lucasmk122",
-    image: shirt1,
-    caption:
-      "Awesome caption Awesome caption Awesome caption Awesome caption Awesome caption Awesome caption ",
-    purchasedFrom: "xyz",
-  },
-];
 const FeedScreen = ({ navigation }) => {
+  const [loading, setLoading] = useState(true);
+  const [post, setPostInfo] = useState([]);
+  const navigator = useNavigation();
+
+  const goToPost = () => {
+    navigator.navigate("Make Post");
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      getAllPosts()
+        .then((data) => {
+          setPostInfo(data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log("Error fetching outfits:", error);
+          setLoading(false);
+        });
+    }, [])
+  );
+
   return (
     <ScrollView
       style={{ backgroundColor: "#010000" }}
       contentContainerStyle={{ paddingVertical: 20 }}
     >
-      <GroupPostings posts={postInfo}></GroupPostings>
+      <SafeAreaView>
+        <View style={{ alignSelf: "flex-end", marginTop: 10, marginRight: 10 }}>
+          <TouchableOpacity onPress={() => goToPost()}>
+            <Icon name="edit" size={30} color="#caa5c5" />
+          </TouchableOpacity>
+        </View>
+        {loading ? (
+          <SafeAreaView>
+            <ActivityIndicator size="large" color="#BB8BB2" />
+          </SafeAreaView>
+        ) : (
+          <GroupPostings posts={post}></GroupPostings>
+        )}
+      </SafeAreaView>
     </ScrollView>
   );
 };

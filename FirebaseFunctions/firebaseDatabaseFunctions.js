@@ -401,21 +401,57 @@ const getProfile = async () => {
     console.log(error);
   }
 };
-const savePost = async (outfitURIs, pfpURI, username, purchasedFrom, bio) => {
+const savePost = async (outfitURIs, purchasedFrom, caption) => {
   try {
     const docRef = await addDoc(collection(db, "Posts"), {
+      id: uuidv4(),
       outfitURIs,
-      pfpURI,
-      username,
+      pfpURI: doc(db, auth.currentUser.uid, "Profile", "userInfo", "profilePic"),
+      username: doc(db, auth.currentUser.uid, "Profile", "userInfo", "username"),
       purchasedFrom,
-      bio,
+      caption,
+      comments: [""],
     });
     console.log("Document saved correctly", docRef.id);
   } catch (error) {
     console.log(error);
   }
 };
+const getAllPosts = async () => {
+  try {
+    const postRef = collection(db, "Posts");
+    const postSnapshot = await getDocs(postRef);
+    const posts = [];
+    for (const postDoc of postSnapshot.docs) {
+      const postData = postDoc.data();
+      const usernameDoc = await getDoc(postData.username);
+      const pfpDoc = await getDoc(postData.pfpURI);
+      const usernameData = usernameDoc.data();
+      const pfpData = pfpDoc.data();
 
+      posts.push({
+        id: uuidv4(),
+        username: usernameData.username,
+        pfp: pfpData.profilePic,
+        purchasedFrom: postData.purchasedFrom,
+        caption: postData.caption,
+        outfitUris: postData.outfitURIs,
+      });
+    }
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+};
+const saveComments = async (comments, postID) => {
+  try {
+    const docRef = doc(db, "Posts", postID);
+    await updateDoc(docRef, { comments });
+    console.log("Updated Comments", docRef.id);
+  } catch (error) {
+    console.log(error);
+  }
+};
 export {
   uploadImageWithTag,
   getUserTagsAndImages,
@@ -426,4 +462,5 @@ export {
   saveProfile,
   getProfile,
   savePost,
+  getAllPosts,
 };
