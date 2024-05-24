@@ -16,6 +16,7 @@ import AlbumsScreen from "./screens/AlbumsScreen";
 import LoginScreen from "./screens/LoginScreen";
 import CommentScreen from "./screens/CommentScreen.js";
 import EditProfileScreen from "./screens/EditProfileScreen";
+import PostOutfitScreen from "./screens/PostOutfitScreen";
 
 const FeedName = "Feed";
 const CameraName = "Camera";
@@ -25,6 +26,7 @@ const AlbumsName = "Albums";
 const LoginName = "Login";
 const CommentName = "Comment";
 const EditProfileName = "Edit Profile";
+const PostOutfitName = "Make Post";
 
 // Creates the bottom navigation bar on each of the screens
 const Tab = createBottomTabNavigator();
@@ -55,7 +57,12 @@ function MainContainer() {
           <Stack.Screen
             name={EditProfileName}
             component={EditProfileScreen}
-            options={{ headerShown: true, headerStyle: { backgroundColor: "#000000" } }}
+            options={{ headerShown: false, headerStyle: { backgroundColor: "#000000" } }}
+          />
+          <Stack.Screen
+            name={PostOutfitName}
+            component={PostOutfitScreen}
+            options={{ headerShown: false, headerStyle: { backgroundColor: "#010001" } }}
           />
         </Stack.Navigator>
       )}
