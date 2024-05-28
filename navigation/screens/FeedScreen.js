@@ -15,6 +15,7 @@ import blue from "../../assets/blue.png";
 import Icon from "react-native-vector-icons/Entypo";
 import Icon2 from "react-native-vector-icons/SimpleLineIcons";
 import Icon3 from "react-native-vector-icons/Feather";
+import { FontAwesome } from "@expo/vector-icons";
 import { getAllPosts } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
 
 const windowSize = Dimensions.get("window").width;
@@ -27,6 +28,11 @@ const Post = ({ post }) => {
   const goToComments = (id) => {
     navigator.navigate("Comment", { postID: id });
   };
+  const [iconName, setIconName] = useState("heart-o");
+  const switchIcon = () => {
+    setIconName((prevIconName) => (prevIconName === "heart-o" ? "heart" : "heart-o"));
+  };
+
   return (
     <SafeAreaView>
       <View
@@ -76,8 +82,8 @@ const Post = ({ post }) => {
           ))}
         </View>
         <View style={{ flex: 1, flexDirection: "row", paddingLeft: 15 }}>
-          <TouchableOpacity>
-            <Icon name={"heart-outlined"} size={50} color={"#90d7f8"}></Icon>
+          <TouchableOpacity onPress={switchIcon}>
+            <FontAwesome name={iconName} size={45} color="#90d7f8" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => goToComments(post.id)}>
             <Icon2 name={"bubble"} size={45} color={"#90d7f8"}></Icon2>
