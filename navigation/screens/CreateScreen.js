@@ -19,6 +19,7 @@ import {
   saveOutfit,
 } from "../../FirebaseFunctions/firebaseDatabaseFunctions";
 import { useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const ImageList = ({ images, selectedImage, onPressImage }) => (
   <View style={{ alignItems: "center", marginBottom: 12, marginTop: 12 }}>
@@ -51,6 +52,7 @@ const ImageList = ({ images, selectedImage, onPressImage }) => (
 const Create = () => {
   const [selectedImages, setSelectedImages] = useState({});
   const [dataSet, setDataSet] = useState([]);
+  const navigator = useNavigation();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -150,7 +152,10 @@ const Create = () => {
       console.log(error);
     }
   };
-
+  const goToPost = async () => {
+    await createOutfit();
+    navigator.navigate("Make Post");
+  };
   return (
     <View style={{ flex: 1, padding: 20, backgroundColor: "#010000" }}>
       <SafeAreaView>
@@ -173,7 +178,7 @@ const Create = () => {
           >
             <View style={{ alignItems: "center", marginRight: 10 }}>
               <TouchableOpacity onPress={getExisting}>
-                <Icon2 name="create" size = {70} color="#caa5c5" />
+                <Icon2 name="create" size={70} color="#caa5c5" />
                 <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>
                   Change Existing
                 </Text>
@@ -188,7 +193,7 @@ const Create = () => {
               </TouchableOpacity>
             </View>
             <View style={{ alignItems: "center" }}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={goToPost}>
                 <Icon4 name="send" size={70} color="#caa5c5" />
                 <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>
                   Post Outfit
