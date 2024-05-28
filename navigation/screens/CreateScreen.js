@@ -10,6 +10,8 @@ import {
   Alert,
 } from "react-native";
 import Icon2 from "react-native-vector-icons/Ionicons";
+import Icon3 from "react-native-vector-icons/Ionicons";
+import Icon4 from "react-native-vector-icons/Ionicons";
 import {
   getAllOutfits,
   getImagesIntoCategory,
@@ -171,7 +173,7 @@ const Create = () => {
           >
             <View style={{ alignItems: "center", marginRight: 10 }}>
               <TouchableOpacity onPress={getExisting}>
-                <Icon2 name="shirt" size={70} color="#caa5c5" />
+                <Icon2 name="create" size = {70} color="#caa5c5" />
                 <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>
                   Change Existing
                 </Text>
@@ -179,7 +181,7 @@ const Create = () => {
             </View>
             <View style={{ alignItems: "center", marginRight: 10 }}>
               <TouchableOpacity onPress={createOutfit}>
-                <Icon2 name="shirt" size={70} color="#caa5c5" />
+                <Icon3 name="add-circle-outline" size={70} color="#caa5c5" />
                 <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>
                   Create Outfit
                 </Text>
@@ -187,7 +189,7 @@ const Create = () => {
             </View>
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity>
-                <Icon2 name="shirt" size={70} color="#caa5c5" />
+                <Icon4 name="send" size={70} color="#caa5c5" />
                 <Text style={{ textAlign: "center", color: "#d66391", marginTop: 5 }}>
                   Post Outfit
                 </Text>
